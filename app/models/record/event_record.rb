@@ -1,14 +1,5 @@
-# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
-
-one:
-  external_id: MyString
-  json_data: 
-  xml_data: MyText
-
-two:
-  external_id: MyString
-  json_data: 
-  xml_data: MyText
+class EventRecord < Record
+end
 
 # == Schema Information
 #

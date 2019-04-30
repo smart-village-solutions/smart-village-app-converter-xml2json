@@ -19,6 +19,7 @@ ActiveRecord::Schema.define(version: 2019_04_30_153212) do
     t.string "external_id"
     t.jsonb "json_data"
     t.text "xml_data"
+    t.string "type", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

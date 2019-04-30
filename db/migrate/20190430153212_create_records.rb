@@ -4,6 +4,7 @@ class CreateRecords < ActiveRecord::Migration[6.0]
       t.string :external_id
       t.jsonb :json_data
       t.text :xml_data
+      t.string :type, null: false
 
       t.timestamps
     end
