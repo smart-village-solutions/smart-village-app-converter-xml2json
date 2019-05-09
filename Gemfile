@@ -22,6 +22,9 @@ gem 'puma', '~> 3.11'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.2', require: false
 
+# Parsing XML documents
+gem 'nokogiri'
+
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 # gem 'rack-cors'
 
@@ -34,9 +37,20 @@ group :development do
   gem 'annotate'
   gem 'listen', '>= 3.0.5', '< 3.2'
   gem 'rb-readline'
-  # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
-  gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
+  gem 'spring'
+  gem "byebug", platforms: %i[mri mingw x64_mingw]
+  gem "codeclimate-test-reporter"
+  gem "database_cleaner"
+  gem "factory_bot_rails"
+  gem "factory_bot"
+  gem "guard-rspec"
+  gem "guard"
+  gem "linter", git: "https://github.com/ikuseiGmbH/linters.git", tag: "rubocop-0.63.1"
+  gem "rails-controller-testing"
+  gem "rspec-rails"
+  gem "shoulda-matchers"
+  gem "simplecov"
 end
 
 
