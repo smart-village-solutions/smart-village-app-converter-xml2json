@@ -1,4 +1,12 @@
 class PoiRecord < Record
+
+  def convert_xml_to_hash
+    # TODO: hier passiert dann die Magie der Umwandlung
+    xml = Nokogiri.XML(xml_data)
+    xml.remove_namespaces!
+    xml.xpath("//poi").count
+  end
+
 end
 
 # == Schema Information

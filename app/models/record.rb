@@ -1,4 +1,12 @@
 class Record < ApplicationRecord
+
+  def convert_to_json(hash_data)
+    hash_data.to_json
+  end
+
+  def convert_xml_to_hash
+    raise "Abstract Method"
+  end
 end
 
 # == Schema Information
