@@ -9,7 +9,7 @@
 
 # Ignore all logfiles and tempfiles.
 /log/*
-/doc/tmb.xml
+/doc/tmb_*.*
 /tmp/*
 !/log/.keep
 !/tmp/.keep

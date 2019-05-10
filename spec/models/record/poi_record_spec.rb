@@ -2,9 +2,9 @@ require 'rails_helper'
 
 RSpec.describe PoiRecord, type: :model do
   describe "import" do
-    let(:xml_raw_data) { File.read("doc/tmb.xml") }
+    let(:xml_raw_data) { File.read("doc/tmb_poi.xml") }
+    let(:poi_hash) { JSON.parse(File.read("doc/tmb_poi.json")) }
     let(:poi) { PoiRecord.new }
-    let(:poi_hash) { JSON.parse(File.read("doc/poi.json")) }
 
     it "stores a xml in xml_data" do
       poi.xml_data = xml_raw_data
@@ -21,7 +21,7 @@ RSpec.describe PoiRecord, type: :model do
     it "converts an xml to hash" do
       poi.xml_data = xml_raw_data
 
-      expect(poi.convert_xml_to_hash).to eq(2)
+      expect(poi.convert_xml_to_hash).to eq(poi_hash)
     end
   end
 end
