@@ -20,8 +20,10 @@ RSpec.describe PoiRecord, type: :model do
 
     it "converts an xml to hash" do
       poi.xml_data = xml_raw_data
+      result = poi.convert_xml_to_hash
 
-      expect(poi.convert_xml_to_hash).to eq(poi_hash)
+      expect(result[:points_of_interest].present?).to eq(true)
+      expect(result[:points_of_interest].count).to eq(241)
     end
   end
 end

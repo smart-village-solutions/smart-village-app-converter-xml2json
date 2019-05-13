@@ -1,4 +1,11 @@
 GIT
+  remote: https://github.com/collectiveidea/audited.git
+  revision: f73a6cfa4ae56b73033ff659cb3cb16851df59cc
+  specs:
+    audited (4.7.0)
+      activerecord (>= 4.2, < 6.1)
+
+GIT
   remote: https://github.com/ikuseiGmbH/linters.git
   revision: 57e587a215a38a73463afd48ff5c66aeb252b611
   tag: rubocop-0.63.1
@@ -65,6 +72,8 @@ GEM
       minitest (~> 5.1)
       tzinfo (~> 1.1)
       zeitwerk (~> 2.1, >= 2.1.4)
+    addressable (2.6.0)
+      public_suffix (>= 2.0.2, < 4.0)
     annotate (2.7.5)
       activerecord (>= 3.2, < 7.0)
       rake (>= 10.4, < 13.0)
@@ -142,6 +151,7 @@ GEM
     pry (0.12.2)
       coderay (~> 1.1.0)
       method_source (~> 0.9.0)
+    public_suffix (3.0.3)
     puma (3.12.1)
     rack (2.0.7)
     rack-test (1.1.0)
@@ -249,7 +259,9 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  addressable
   annotate
+  audited!
   bootsnap (>= 1.4.2)
   byebug
   codeclimate-test-reporter

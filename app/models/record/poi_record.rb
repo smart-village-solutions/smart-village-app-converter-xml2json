@@ -1,8 +1,18 @@
 class PoiRecord < Record
 
+  def load_xml_data
+    url = Rails.application.credentials.poi_source[:url]
+    pem = Rails.application.credentials.tmb_auth[:pem]
+    result = ApiRequestService.new(url).get_request(false, pem)
+
+    return unless result.code == "200"
+    return unless result.body.present?
+
+    self.xml_data = result.body
+  end
+
   def convert_xml_to_hash
     poi_data = []
-    # TODO: hier passiert dann die Magie der Umwandlung
     @xml_doc = Nokogiri.XML(xml_data)
     @xml_doc.remove_namespaces!
     @base_file_url = @xml_doc.at_xpath("/result/@fileUrl").try(:value)
@@ -10,10 +20,7 @@ class PoiRecord < Record
       poi_data << parse_single_poi_from_xml(xml_poi)
     end
 
-    # temporär zum entwickeln
-    # poi_data << parse_single_poi_from_xml(@xml_doc.xpath("/result/poi[@id='12572']").first)
-
-    { points_of_interest: poi_data }
+    self.json_data = { points_of_interest: poi_data }
   end
 
   def parse_single_poi_from_xml(poi)
@@ -24,7 +31,6 @@ class PoiRecord < Record
       mobile_description: "???",
       categories: parse_categories(poi),
       created_at: poi.attributes["tstamp"].try(:value),
-      status: "???",
       data_provider: parse_dataprovider(poi),
       addresses: parse_addresses(poi),
       contact: parse_contact(poi.xpath("connections")),
@@ -80,8 +86,8 @@ class PoiRecord < Record
   #
   # @return [String] Name of tag found in xml
   def find_tag_by_id(tag_id)
-    # TODO: secure access
-    @xml_doc.xpath("/result/attribute[@id='#{tag_id}']").first.attributes["name"].try(:value)
+    tag = @xml_doc.xpath("/result/attribute[@id='#{tag_id}']").first
+    tag.attributes["name"].try(:value) if tag.present?
   end
 
   # Parsing poi data for category information
@@ -103,7 +109,7 @@ class PoiRecord < Record
     @xml_doc.xpath("/result/classification[@id='#{cat_id}']").first.attributes["name"].try(:value)
   end
 
-  # TODO
+  # TODO: Informationen hierzu kommen aus den Login-Daten
   def parse_dataprovider(xml_part)
     {
       name: "tmb",
