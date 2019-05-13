@@ -1,4 +1,9 @@
 class Record < ApplicationRecord
+  audited only: :updated_at
+
+  def load_xml_data
+    raise "Abstract Method"
+  end
 
   def convert_to_json(hash_data)
     hash_data.to_json
