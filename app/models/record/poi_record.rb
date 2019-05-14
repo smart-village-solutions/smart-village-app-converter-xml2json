@@ -1,5 +1,9 @@
 class PoiRecord < Record
 
+  # Load poi data from external source
+  # and save it to local attribute 'xml_data'
+  #
+  # @return [XML] XML - Data
   def load_xml_data
     url = Rails.application.credentials.poi_source[:url]
     pem = Rails.application.credentials.tmb_auth[:pem]
@@ -11,6 +15,9 @@ class PoiRecord < Record
     self.xml_data = result.body
   end
 
+  # Parse XML Data and converts it to a Hash
+  #
+  # @return [Hash] Hash of point of interests
   def convert_xml_to_hash
     poi_data = []
     @xml_doc = Nokogiri.XML(xml_data)
