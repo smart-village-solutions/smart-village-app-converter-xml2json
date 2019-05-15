@@ -9,12 +9,14 @@ class Importer
   # - save response from server an log it
   # - send notifications
   def initialize(record_type: :poi)
-    @record_type = record_type
-    @record = new_record
-    @record.load_xml_data
-    @record.convert_xml_to_hash
-    @access_token = login_on_auth_server
-    send_json_to_server
+    @current_user = login_on_auth_server
+    if @current_user.present?
+      @record_type = record_type
+      @record = new_record
+      @record.load_xml_data
+      @record.convert_xml_to_hash
+      send_json_to_server
+    end
   end
 
   def login_on_auth_server
@@ -27,7 +29,7 @@ class Importer
 
     if result.code == "200" && result.body.present?
       data = JSON.parse(result.body)
-      return data["access_token"]
+      return data
     end
   rescue
     nil
@@ -36,17 +38,18 @@ class Importer
   def new_record
     case @record_type
     when :poi
-      PoiRecord.new
+      PoiRecord.new(current_user: @current_user)
     when :tour
-      TourRecord.new
+      TourRecord.new(current_user: @current_user)
     when :event
-      EventRecord.new
+      EventRecord.new(current_user: @current_user)
     end
   end
 
   def send_json_to_server
+    access_token = @current_user.fetch("access_token", "")
     base_url = Rails.application.credentials.target_server[:url]
-    url = "#{base_url}?auth_token=#{@access_token}"
+    url = "#{base_url}?auth_token=#{access_token}"
 
     begin
       result = ApiRequestService.new(url, nil, nil, @record.json_data).post_request

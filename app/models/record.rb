@@ -1,5 +1,12 @@
 class Record < ApplicationRecord
+  attr_accessor :current_user
+
   audited only: :updated_at
+
+  def initialize(current_user: nil)
+    @current_user = current_user
+    super
+  end
 
   def load_xml_data
     raise "Abstract Method"
@@ -11,6 +18,32 @@ class Record < ApplicationRecord
 
   def convert_xml_to_hash
     raise "Abstract Method"
+  end
+
+  def dataprovider
+    {
+      name: "",
+      address: {
+        addition: "",
+        street: "",
+        zip: "",
+        city: "",
+        coordinates: {
+          lat: "",
+          lng: ""
+        }
+      },
+      contact: {
+        first_name: "",
+        last_name: "",
+        phone: "",
+        fax: "",
+        email: "",
+        url: ""
+      },
+      logo: "",
+      description: ""
+    }
   end
 end
 

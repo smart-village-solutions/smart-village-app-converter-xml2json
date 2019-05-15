@@ -4,7 +4,7 @@ RSpec.describe PoiRecord, type: :model do
   describe "import" do
     let(:xml_raw_data) { File.read("doc/tmb_poi.xml") }
     let(:poi_hash) { JSON.parse(File.read("doc/tmb_poi.json")) }
-    let(:poi) { PoiRecord.new }
+    let(:poi) { PoiRecord.new(current_user: nil) }
 
     it "stores a xml in xml_data" do
       poi.xml_data = xml_raw_data
@@ -22,8 +22,8 @@ RSpec.describe PoiRecord, type: :model do
       poi.xml_data = xml_raw_data
       result = poi.convert_xml_to_hash
 
-      expect(result[:points_of_interest].present?).to eq(true)
-      expect(result[:points_of_interest].count).to eq(241)
+      expect(result[:point_of_interests].present?).to eq(true)
+      expect(result[:point_of_interests].count).to eq(241)
     end
   end
 end

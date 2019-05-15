@@ -27,7 +27,7 @@ class PoiRecord < Record
       poi_data << parse_single_poi_from_xml(xml_poi)
     end
 
-    self.json_data = { points_of_interest: poi_data }
+    self.json_data = { point_of_interests: poi_data }
   end
 
   def parse_single_poi_from_xml(poi)
@@ -38,7 +38,7 @@ class PoiRecord < Record
       mobile_description: "???",
       categories: parse_categories(poi),
       created_at: poi.attributes["tstamp"].try(:value),
-      data_provider: parse_dataprovider(poi),
+      data_provider: dataprovider,
       addresses: parse_addresses(poi),
       contact: parse_contact(poi.xpath("connections")),
       operating_company: parse_operating_company(poi),
@@ -115,34 +115,6 @@ class PoiRecord < Record
   def find_category_by_id(cat_id)
     @xml_doc.xpath("/result/classification[@id='#{cat_id}']").first.attributes["name"].try(:value)
   end
-
-  # TODO: Informationen hierzu kommen aus den Login-Daten
-  def parse_dataprovider(xml_part)
-    {
-      name: "tmb",
-      address: {
-        addition: "",
-        street: "Musterstr. 123",
-        zip: "14567",
-        city: "Potsdam",
-        coordinates: {
-          lat: 52.345678,
-          lng: 12.345678
-        }
-      },
-      contact: {
-        first_name: "Max",
-        last_name: "Mustermann",
-        phone: "+4903384860004",
-        fax: "",
-        email: "test@test.net",
-        url: "http://www.flaeming.net"
-      },
-      logo: "image_link",
-      description: ""
-    }
-  end
-
 
   # Parse Address from xml-part
   #
