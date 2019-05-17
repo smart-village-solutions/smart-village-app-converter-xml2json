@@ -20,7 +20,8 @@ class Record < ApplicationRecord
     raise "Abstract Method"
   end
 
-  # TODO
+  # TODO: Diese Daten müssen aus den UserCredentials erzeugt werden,
+  # die im current_user gespeichert sein sollen.
   def data_provider
     {
       name: "",
