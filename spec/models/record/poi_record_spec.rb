@@ -12,13 +12,13 @@ RSpec.describe PoiRecord, type: :model do
       expect(poi.xml_data).not_to be_empty
     end
 
-    it "converts an hash to json" do
+    it "converts a hash to json" do
       hash_data = { foo: "bar" }
 
       expect(poi.convert_to_json(hash_data)).to eq("{\"foo\":\"bar\"}")
     end
 
-    it "converts an xml to hash" do
+    it "converts a xml to hash" do
       poi.xml_data = xml_raw_data
       result = poi.convert_xml_to_hash
 

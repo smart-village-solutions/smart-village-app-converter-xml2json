@@ -38,7 +38,7 @@ class PoiRecord < Record
       mobile_description: "???",
       categories: parse_categories(poi),
       created_at: poi.attributes["tstamp"].try(:value),
-      data_provider: dataprovider,
+      data_provider: data_provider,
       addresses: parse_addresses(poi),
       contact: parse_contact(poi.xpath("connections")),
       operating_company: parse_operating_company(poi),
@@ -141,9 +141,9 @@ class PoiRecord < Record
     address_data
   end
 
-  # Erwaartet einen XML Knoten der als kinder
+  # Erwartet einen XML Knoten der als kinder
   # <connection> Elemente besitzt.
-  # Diese Werden dann interativ analysiert und dann ein Contact Hash daraus erzeugt
+  # Diese Werden dann iterativ analysiert und dann ein Contact Hash daraus erzeugt
   #
   # @param [XML] xml_part Nokogiri-Node
   #

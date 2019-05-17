@@ -20,7 +20,8 @@ class Record < ApplicationRecord
     raise "Abstract Method"
   end
 
-  def dataprovider
+  # TODO
+  def data_provider
     {
       name: "",
       address: {

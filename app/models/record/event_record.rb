@@ -17,7 +17,7 @@ class EventRecord < Record
 
   # Parse XML Data and converts it to a Hash
   #
-  # @return [Hash] Hash of point of interests
+  # @return [Hash] Hash of events
   def convert_xml_to_hash
     event_data = []
     @xml_doc = Nokogiri.XML(xml_data)
@@ -46,7 +46,7 @@ class EventRecord < Record
       contact: parse_contact(event),
       organizer: parse_organizer(event),
       location: parse_location(event),
-      data_provider: dataprovider,
+      data_provider: data_provider,
       media_content: parse_media_content(event)
     }
   end
