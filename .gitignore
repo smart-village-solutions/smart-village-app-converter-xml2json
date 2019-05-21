@@ -9,6 +9,7 @@
 
 # Ignore all logfiles and tempfiles.
 /log/*
+/doc/tmb_*.*
 /tmp/*
 !/log/.keep
 !/tmp/.keep
@@ -23,3 +24,9 @@
 /config/database.yml
 /tmp
 /db/githook_dumps
+
+/config/credentials/staging.key
+/config/credentials/production.key
+/config/credentials/test.key
+/config/credentials/development.key
+config/settings.yml
