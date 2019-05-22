@@ -10,6 +10,7 @@ RUN apt-get update \
   && curl -sL https://deb.nodesource.com/setup_10.x | bash \
   && apt-get install -y nodejs \
   && apt-get install -y yarn \
+  && apt-get install -y --no-install-recommends cron \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/* /usr/src/*
 
@@ -21,10 +22,13 @@ RUN bundle install
 
 COPY . /app
 
+ENV GEM_HOME="/usr/local/bundle"
+ENV PATH $GEM_HOME/bin:$GEM_HOME/gems/bin:$PATH
+
 ENTRYPOINT ["/app/docker/entrypoint.sh"]
 
 VOLUME /unicorn
 VOLUME /assets
 
 # Start the main process.
-CMD ["bundle", "exec", "unicorn", "-c", "./config/unicorn.rb"]
+CMD bundle exec unicorn -c ./config/unicorn.rb

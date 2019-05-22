@@ -2,6 +2,9 @@
 
 set -e
 
+unset BUNDLE_PATH
+unset BUNDLE_BIN
+
 # Remove a potentially pre-existing server.pid for Rails.
 rm -f /myapp/tmp/pids/server.pid
 
