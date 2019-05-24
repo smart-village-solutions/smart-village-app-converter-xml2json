@@ -74,7 +74,7 @@ class PoiRecord < Record
       operating_company: parse_operating_company(tour),
       location: parse_location(tour),
       media_contents: parse_media_contents(tour),
-      tags: parse_urls(tour),
+      tags: parse_tags(tour),
       certificates: parse_certificates(tour),
       accessibility_information: parse_accessibility(tour),
       length_km: parse_length_km(tour),
@@ -170,9 +170,6 @@ class PoiRecord < Record
       end
 
       address_data
-    end
-
-    def parse_urls(xml_part)
     end
 
     def parse_tour_address(xml_part, node)
