@@ -8,7 +8,7 @@ class Importer
   # - send JSON Data to server
   # - save response from server an log it
   # - send notifications
-  def initialize(record_type: :poi)
+  def initialize(record_type)
     load_user_data
 
     if @current_user.present?

@@ -36,18 +36,19 @@ class EventRecord < Record
       description: event.at_xpath("E_BESCHREIBUNG").try(:text),
       price_information: event.at_xpath("E_PREISTEXT").try(:text),
       category: event.at_xpath("KATEGORIE_NAME_D").try(:text),
+      #todo ticket_url kommt in urls
       ticket_url: event.at_xpath("E_TICKETURL_D").try(:text),
       region: event.at_xpath("REGION_NAME_D").try(:text),
       accessibility_information: parse_accessibility(event),
       updated_at: event.at_xpath("E_MODIFYDATE").try(:text),
       dates: parse_event_dates(event),
       urls: parse_urls(event),
-      address: parse_address(event),
-      contact: parse_contact(event),
+      addresses: parse_address(event),
+      contacts: parse_contact(event),
       organizer: parse_organizer(event),
       location: parse_location(event),
       data_provider: data_provider,
-      media_content: parse_media_content(event)
+      media_contents: parse_media_content(event)
     }
   end
 
