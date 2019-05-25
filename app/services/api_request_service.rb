@@ -9,6 +9,8 @@
 #
 require "addressable/uri"
 
+require 'net/http'
+
 class ApiRequestService
   def initialize(uri, login = nil, password = nil, params = {}, headers = {})
     @uri = uri
