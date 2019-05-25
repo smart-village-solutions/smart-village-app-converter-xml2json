@@ -20,7 +20,8 @@ env :GEM_HOME, '/usr/local/bundle'
 env :BUNDLE_APP_CONFIG, '/usr/local/bundle'
 
 every 1.day do
-  runner "Importer.new"
+  runner "Importer.new(:poi)"
+  runner "Importer.new(:event)"
 end
 
 # Learn more: http://github.com/javan/whenever
