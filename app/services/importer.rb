@@ -24,8 +24,6 @@ class Importer
     case @record_type
     when :poi
       PoiRecord.new(current_user: @current_user)
-    when :tour
-      TourRecord.new(current_user: @current_user)
     when :event
       EventRecord.new(current_user: @current_user)
     end
@@ -47,7 +45,7 @@ class Importer
   def send_json_to_server
     access_token = Authentication.new.access_token
     base_url = Rails.application.credentials.target_server[:url]
-    url = "#{base_url}/tobedefined"
+    url = "#{base_url}/api"
 
     begin
       result = ApiRequestService.new(url, nil, nil, @record.json_data, {Authorization: "Bearer #{access_token}"}).post_request
