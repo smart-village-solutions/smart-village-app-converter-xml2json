@@ -32,13 +32,13 @@ class Importer
   def load_user_data
     access_token = Authentication.new.access_token
     base_url = Rails.application.credentials.auth_server[:url]
-    url = "#{base_url}/data_provider"
+    url = "#{base_url}/data_provider.json"
 
     begin
       result = ApiRequestService.new(url, nil, nil, @record.json_data, {Authorization: "Bearer #{access_token}"}).post_request
       @current_user = JSON.parse(result.body)
     rescue => e
-      @current_user = { data_provider: { foo: "bar" } }
+      @current_user = { data_provider: {} }
     end
   end
 
