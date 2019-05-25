@@ -8,7 +8,6 @@
 # @params   [Hash]   An optional hash of parameters for the request
 #
 require "addressable/uri"
-
 require 'net/http'
 
 class ApiRequestService
