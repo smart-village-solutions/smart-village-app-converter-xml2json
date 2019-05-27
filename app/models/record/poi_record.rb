@@ -253,7 +253,7 @@ class PoiRecord < Record
         when "telefax"
           contact[:fax] = con_value
         when "email"
-          contact[:mail] = con_value
+          contact[:email] = con_value
         when "url", "urlInformation", "urlVideo", "urlVideopreview", "urlSocialmedia"
           contact[:webUrls] = [] if contact[:webUrls].blank?
           contact[:webUrls] << {
