@@ -44,8 +44,6 @@ class PoiRecord < Record
       name: poi.attributes["name"].try(:value),
       description: poi.xpath("description/text").try(:text),
       mobile_description: poi.xpath("descriptionMobileSingle/text").try(:text),
-      categories: parse_categories(poi),
-      created_at: poi.attributes["tstamp"].try(:value),
       data_provider: data_provider,
       addresses: parse_addresses(poi),
       contact: parse_contact(poi.xpath("connections")),
@@ -69,8 +67,6 @@ class PoiRecord < Record
       name: tour.attributes["name"].try(:value),
       description: tour.xpath("description/text").try(:text),
       mobile_description: tour.xpath("descriptionMobileSingle/text").try(:text),
-      categories: parse_categories(tour),
-      created_at: tour.attributes["tstamp"].try(:value),
       data_provider: data_provider,
       addresses: parse_addresses(tour),
       contact: parse_contact(tour.xpath("connections")),
@@ -303,9 +299,7 @@ class PoiRecord < Record
         name: location.attributes["name"].try(:value),
         department: department_name_for_location(location),
         district: district_name_for_location(location),
-        region: region_name_for_location(location),
         state: state_for_location(location),
-        country: "Germany",
         geoLocation: {
           lat: coordinates.try(:at_xpath, "x").try(:text),
           lng: coordinates.try(:at_xpath, "y").try(:text)
