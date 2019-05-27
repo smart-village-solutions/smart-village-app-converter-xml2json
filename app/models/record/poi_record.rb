@@ -152,6 +152,7 @@ class PoiRecord < Record
       address_data << parse_default_addresses(xml_part)
       address_data << parse_tour_address(xml_part, "tourStart")
       address_data << parse_tour_address(xml_part, "tourEnd")
+      address_data.compact.flatten
     end
 
     def parse_default_addresses(xml_part)
@@ -176,7 +177,7 @@ class PoiRecord < Record
 
     def parse_tour_address(xml_part, node)
       tour_node = get_tour(xml_part)
-      return {} unless tour_node.present?
+      return unless tour_node.present?
 
       case node
       when "tourStart"
