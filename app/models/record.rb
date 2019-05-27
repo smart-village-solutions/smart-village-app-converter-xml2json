@@ -20,32 +20,10 @@ class Record < ApplicationRecord
     raise "Abstract Method"
   end
 
-  # TODO: Diese Daten müssen aus den UserCredentials erzeugt werden,
-  # die im current_user gespeichert sein sollen.
   def data_provider
-    {
-      name: "",
-      address: {
-        addition: "",
-        street: "",
-        zip: "",
-        city: "",
-        coordinates: {
-          lat: "",
-          lng: ""
-        }
-      },
-      contact: {
-        first_name: "",
-        last_name: "",
-        phone: "",
-        fax: "",
-        email: "",
-        url: ""
-      },
-      logo: "",
-      description: ""
-    }
+    return {} if @current_user.blank?
+
+    @current_user.fetch(:data_provider, {})
   end
 end
 
