@@ -259,8 +259,11 @@ class PoiRecord < Record
         when "email"
           contact[:mail] = con_value
         when "url", "urlInformation", "urlVideo", "urlVideopreview", "urlSocialmedia"
-          contact[:urls] = [] if contact[:urls].blank?
-          contact[:urls] << { url: con_value, description: con_type }
+          contact[:webUrls] = [] if contact[:webUrls].blank?
+          contact[:webUrls] << {
+            url: add_missing_protocol(con_value),
+            description: con_type
+          }
         when "person"
           contact[:last_name] = con_value
         end
@@ -430,6 +433,11 @@ class PoiRecord < Record
         description: "Barrierefreiheits-Informationen verfügbar",
         url: "http://www.barrierefrei-brandenburg.de/index.php?id=dsview&tx_tmbpoisearch_pi2[poi]=#{poi_id}"
       }
+    end
+
+    def add_missing_protocol(url)
+      return if url.blank?
+      url.start_with?('www') ? 'http://' + url : url
     end
 end
 
