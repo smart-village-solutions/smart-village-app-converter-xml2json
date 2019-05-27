@@ -158,17 +158,18 @@ class PoiRecord < Record
     def parse_default_addresses(xml_part)
       address_data = xml_part.xpath("addresses/address").inject([]) do |memo, address|
         coordinates = address.xpath("coordinates/coordinate[@cos='latlng']").first
+        lat = coordinates.try(:at_xpath, "x").try(:text)
+        lng = coordinates.try(:at_xpath, "y").try(:text)
+
         addr = {
           addition: address.at_xpath("addition").try(:text),
           city: address.at_xpath("location").try(:text),
           street: address.at_xpath("street").try(:text),
           zip: address.at_xpath("zip").try(:text),
-          kind: "default",
-          geoLocation: {
-            lat: coordinates.at_xpath("x").try(:text),
-            lng: coordinates.at_xpath("y").try(:text)
-          }
+          kind: "default"
         }
+
+        addr[:geo_location] = geo_location_input(lat, lng) if lat.present? && lng.present?
         memo << addr
       end
 
@@ -188,17 +189,19 @@ class PoiRecord < Record
 
       address = tour_node.xpath(node)
       coordinates = address.xpath("coordinates/coordinate[@cos='latlng']").first
-      {
+      lat = coordinates.try(:at_xpath, "x").try(:text)
+      lng = coordinates.try(:at_xpath, "y").try(:text)
+
+      return_value = {
         addition: address.at_xpath("addition").try(:text),
         city: address.at_xpath("location").try(:text),
         street: address.at_xpath("street").try(:text),
         zip: address.at_xpath("zip").try(:text),
-        kind: kind,
-        geoLocation: {
-          lat: coordinates.at_xpath("x").try(:text),
-          lng: coordinates.at_xpath("y").try(:text)
-        }
+        kind: kind
       }
+
+      return_value[:geo_location] = geo_location_input(lat, lng) if lat.present? && lng.present?
+      return_value
     end
 
     def parse_geometry_tour_data(xml_part)
@@ -295,16 +298,24 @@ class PoiRecord < Record
       return {} if location.blank?
 
       coordinates = location.xpath("coordinates/coordinate[@cos='latlng']").first
+      lat = coordinates.try(:at_xpath, "x").try(:text)
+      lng = coordinates.try(:at_xpath, "y").try(:text)
 
-      {
+      return_value = {
         name: location.attributes["name"].try(:value),
         department: department_name_for_location(location),
         district: district_name_for_location(location),
-        state: state_for_location(location),
-        geoLocation: {
-          lat: coordinates.try(:at_xpath, "x").try(:text),
-          lng: coordinates.try(:at_xpath, "y").try(:text)
-        }
+        state: state_for_location(location)
+      }
+
+      return_value[:geo_location] = geo_location_input(lat, lng) if lat.present? && lng.present?
+      return_value
+    end
+
+    def geo_location_input(latitude, longitude)
+      {
+        latitude: latitude.to_f,
+        longitude: longitude.to_f
       }
     end
 
