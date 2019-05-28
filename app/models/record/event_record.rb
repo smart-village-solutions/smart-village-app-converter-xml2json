@@ -47,7 +47,7 @@ class EventRecord < Record
       contacts: parse_contact(event),
       organizer: parse_organizer(event),
       location: parse_location(event),
-      data_provider: data_provider,
+      data_provider: data_provider(@current_user),
       media_contents: parse_media_content(event)
     }
   end
