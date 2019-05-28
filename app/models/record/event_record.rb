@@ -56,13 +56,13 @@ class EventRecord < Record
   def parse_accessibility(event)
     {
       description: event.at_xpath("E_BARRIEREFREI_TEXT").try(:text),
+      types: event.at_xpath("E_BARRIEREFREI_TYPES").try(:text),
       urls: [
         {
           url: event.at_xpath("E_BARRIEREFREI_URL").try(:text),
           description: event.at_xpath("E_BARRIEREFREI_URLDESC").try(:text)
         }
-      ],
-      types: event.at_xpath("E_BARRIEREFREI_TYPES").try(:text)
+      ]
     }
   end
 
@@ -135,8 +135,11 @@ class EventRecord < Record
   end
 
   def parse_organizer(event)
+    name = event.at_xpath("E_KONTAKT_FIRMA").try(:text)
+    return if name.blank?
+
     {
-      name: event.at_xpath("E_KONTAKT_FIRMA").try(:text),
+      name: name,
       address: {
         addition: event.at_xpath("E_KONTAKT_NAME").try(:text),
         street: event.at_xpath("E_KONTAKT_STRASSE").try(:text),
