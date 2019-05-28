@@ -423,7 +423,7 @@ class PoiRecord < Record
           date_to: opening_day.at_xpath("dateto").try(:text),
           time_from: opening_day.at_xpath("timefrom").try(:text),
           time_to: opening_day.at_xpath("timeto").try(:text),
-          open: opening_day.at_xpath("open").try(:text),
+          open: [1, true, '1', 'true'].include?(opening_day.at_xpath("open").try(:text).try(:downcase)),
           sort_number: index
         }
       end
