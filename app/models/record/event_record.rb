@@ -34,9 +34,9 @@ class EventRecord < Record
       id: event.at_xpath("E_ID").try(:text),
       title: event.at_xpath("E_TITEL").try(:text),
       description: event.at_xpath("E_BESCHREIBUNG").try(:text),
-      price_informations: event.at_xpath("E_PREISTEXT").try(:text),
+      price_informations: [{ description: event.at_xpath("E_PREISTEXT").try(:text) }],
       category_name: event.at_xpath("KATEGORIE_NAME_D").try(:text),
-      region: event.at_xpath("REGION_NAME_D").try(:text),
+      region_name: event.at_xpath("REGION_NAME_D").try(:text),
       accessibility_information: parse_accessibility(event),
       dates: parse_event_dates(event),
       urls: parse_urls(event),
@@ -147,7 +147,11 @@ class EventRecord < Record
         phone: event.at_xpath("E_KONTAKT_TEL").try(:text),
         fax: event.at_xpath("E_KONTAKT_FAX").try(:text),
         email: event.at_xpath("E_KONTAKT_EMAIL").try(:text),
-        url: event.at_xpath("E_KONTAKT_WEB").try(:text)
+        web_urls: [
+          {
+            url: event.at_xpath("E_KONTAKT_WEB").try(:text)
+          }
+        ]
       }
     }
   end
