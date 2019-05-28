@@ -25,6 +25,13 @@ class Record < ApplicationRecord
 
     current_user.fetch("data_provider", {})
   end
+
+  def geo_location_input(latitude, longitude)
+  {
+    latitude: latitude.to_f,
+    longitude: longitude.to_f
+  }
+end
 end
 
 # == Schema Information

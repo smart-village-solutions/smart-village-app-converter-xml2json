@@ -315,13 +315,6 @@ class PoiRecord < Record
       return_value
     end
 
-    def geo_location_input(latitude, longitude)
-      {
-        latitude: latitude.to_f,
-        longitude: longitude.to_f
-      }
-    end
-
     def department_name_for_location(location)
       department_node = location.xpath("department/department").first
       department_ids = department_node.attributes["id"].try(:value) if department_node.present?

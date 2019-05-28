@@ -30,33 +30,38 @@ class EventRecord < Record
   end
 
   def parse_single_event_from_xml(event)
-    {
+    event_data = {
       id: event.at_xpath("E_ID").try(:text),
       title: event.at_xpath("E_TITEL").try(:text),
       description: event.at_xpath("E_BESCHREIBUNG").try(:text),
-      price_information: event.at_xpath("E_PREISTEXT").try(:text),
-      category: event.at_xpath("KATEGORIE_NAME_D").try(:text),
-      #todo ticket_url kommt in urls
-      ticket_url: event.at_xpath("E_TICKETURL_D").try(:text),
+      price_informations: event.at_xpath("E_PREISTEXT").try(:text),
+      category_name: event.at_xpath("KATEGORIE_NAME_D").try(:text),
       region: event.at_xpath("REGION_NAME_D").try(:text),
       accessibility_information: parse_accessibility(event),
-      updated_at: event.at_xpath("E_MODIFYDATE").try(:text),
       dates: parse_event_dates(event),
       urls: parse_urls(event),
       addresses: parse_address(event),
       contacts: parse_contact(event),
-      organizer: parse_organizer(event),
       location: parse_location(event),
       data_provider: data_provider(@current_user),
       media_contents: parse_media_content(event)
     }
+
+    operating_company = parse_organizer(event)
+    event_data[:organizer] = operating_company if operating_company.present?
+
+    event_data
   end
 
   def parse_accessibility(event)
     {
       description: event.at_xpath("E_BARRIEREFREI_TEXT").try(:text),
-      url: event.at_xpath("E_BARRIEREFREI_URL").try(:text),
-      url_description: event.at_xpath("E_BARRIEREFREI_URLDESC").try(:text),
+      urls: [
+        {
+          url: event.at_xpath("E_BARRIEREFREI_URL").try(:text),
+          description: event.at_xpath("E_BARRIEREFREI_URLDESC").try(:text)
+        }
+      ],
       types: event.at_xpath("E_BARRIEREFREI_TYPES").try(:text)
     }
   end
@@ -69,13 +74,20 @@ class EventRecord < Record
         date_end: event.at_xpath("E_DATUM_BIS").try(:text),
         time_end: event.at_xpath("E_ZEIT_BIS").try(:text),
         time_description: event.at_xpath("E_ZEIT_TEXT").try(:text),
-        use_only_time_description: event.at_xpath("E_NODATES").try(:text)
+        use_only_time_description: [1, true, '1', 'true'].include?(event.at_xpath("E_NODATES").try(:text).try(:downcase))
       }
     ]
   end
 
   def parse_urls(event)
     urls = []
+
+    if event.at_xpath("E_TICKETURL_D").try(:text).present?
+      urls << {
+        url: event.at_xpath("E_TICKETURL_D").try(:text),
+        description: "Ticket URL"
+      }
+    end
 
     if event.at_xpath("E_URL1").try(:text).present?
       urls << {
@@ -95,16 +107,18 @@ class EventRecord < Record
   end
 
   def parse_address(event)
-    {
+    return_value = {
       addition: event.at_xpath("E_LOC_NAME").try(:text),
       street: event.at_xpath("E_LOC_STRASSE").try(:text),
       zip: event.at_xpath("E_LOC_PLZ").try(:text),
-      city: event.at_xpath("E_LOC_ORT").try(:text),
-      coordinates: {
-        lat: event.at_xpath("E_GEOKOORD_LAT").try(:text),
-        lng: event.at_xpath("E_GEOKOORD_LNG").try(:text)
-      }
+      city: event.at_xpath("E_LOC_ORT").try(:text)
     }
+
+    lat = event.at_xpath("E_GEOKOORD_LAT").try(:text)
+    lng = event.at_xpath("E_GEOKOORD_LNG").try(:text)
+    return_value[:geo_location] = geo_location_input(lat, lng) if lat.present? && lng.present?
+
+    return_value
   end
 
   def parse_contact(event)
@@ -112,13 +126,17 @@ class EventRecord < Record
       phone: event.at_xpath("E_LOC_TEL").try(:text),
       fax: event.at_xpath("E_LOC_FAX").try(:text),
       email: event.at_xpath("E_LOC_EMAIL").try(:text),
-      url: event.at_xpath("E_LOC_WEB").try(:text)
+      web_urls: [
+        {
+          url: event.at_xpath("E_LOC_WEB").try(:text)
+        }
+      ]
     }
   end
 
   def parse_organizer(event)
     {
-      company_name: event.at_xpath("E_KONTAKT_FIRMA").try(:text),
+      name: event.at_xpath("E_KONTAKT_FIRMA").try(:text),
       address: {
         addition: event.at_xpath("E_KONTAKT_NAME").try(:text),
         street: event.at_xpath("E_KONTAKT_STRASSE").try(:text),
@@ -136,8 +154,7 @@ class EventRecord < Record
 
   def parse_location(event)
     {
-      id: event.at_xpath("REGION_ID").try(:text),
-      region: event.at_xpath("REGION_NAME_D").try(:text)
+      region_name: event.at_xpath("REGION_NAME_D").try(:text)
     }
   end
 
@@ -146,24 +163,30 @@ class EventRecord < Record
 
     if event.at_xpath("IMAGELINK_XL").try(:text).present?
       image_data << {
-        type: "image",
-        link: event.at_xpath("IMAGELINK_XL").try(:text),
+        content_type: "image",
+        source_url: {
+          url: event.at_xpath("IMAGELINK_XL").try(:text)
+        },
         caption_text: event.at_xpath("E_PIC1ALT").try(:text),
       }
     end
 
     if event.at_xpath("IMAGELINK_2_XL").try(:text).present?
       image_data << {
-        type: "image",
-        link: event.at_xpath("IMAGELINK_2_XL").try(:text),
+        content_type: "image",
+        source_url: {
+          url: event.at_xpath("IMAGELINK_2_XL").try(:text)
+        },
         caption_text: event.at_xpath("E_PIC2ALT").try(:text),
       }
     end
 
     if event.at_xpath("IMAGELINK_3_XL").try(:text).present?
       image_data << {
-        type: "image",
-        link: event.at_xpath("IMAGELINK_3_XL").try(:text),
+        content_type: "image",
+        source_url: {
+          url: event.at_xpath("IMAGELINK_3_XL").try(:text)
+        },
         caption_text: event.at_xpath("E_PIC3ALT").try(:text),
       }
     end
