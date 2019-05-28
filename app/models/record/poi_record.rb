@@ -39,17 +39,14 @@ class PoiRecord < Record
   end
 
   def parse_single_poi_from_xml(poi)
-    {
+    poi_data = {
       id: poi.attributes["id"].try(:value),
       name: poi.attributes["name"].try(:value),
       description: poi.xpath("description/text").try(:text),
       mobile_description: poi.xpath("descriptionMobileSingle/text").try(:text),
-      categories: parse_categories(poi),
-      created_at: poi.attributes["tstamp"].try(:value),
       data_provider: data_provider,
       addresses: parse_addresses(poi),
       contact: parse_contact(poi.xpath("connections")),
-      operating_company: parse_operating_company(poi),
       location: parse_location(poi),
       media_contents: parse_media_contents(poi),
       prices: parse_prices(poi),
@@ -58,20 +55,21 @@ class PoiRecord < Record
       certificates: parse_certificates(poi),
       accessibility_information: parse_accessibility(poi)
     }
+
+    operating_company = parse_operating_company(poi)
+    poi_data[:operating_company] = operating_company if operating_company.present?
+    poi_data
   end
 
   def parse_single_tour_from_xml(tour)
-    {
+    tour_data = {
       id: tour.attributes["id"].try(:value),
       name: tour.attributes["name"].try(:value),
       description: tour.xpath("description/text").try(:text),
       mobile_description: tour.xpath("descriptionMobileSingle/text").try(:text),
-      categories: parse_categories(tour),
-      created_at: tour.attributes["tstamp"].try(:value),
       data_provider: data_provider,
       addresses: parse_addresses(tour),
       contact: parse_contact(tour.xpath("connections")),
-      operating_company: parse_operating_company(tour),
       location: parse_location(tour),
       media_contents: parse_media_contents(tour),
       tags: parse_tags(tour),
@@ -80,6 +78,10 @@ class PoiRecord < Record
       length_km: parse_length_km(tour),
       geometry_tour_data: parse_geometry_tour_data(tour)
     }
+
+    operating_company = parse_operating_company(tour)
+    tour_data[:operating_company] = operating_company if operating_company.present?
+    tour_data
   end
 
   private
@@ -150,22 +152,24 @@ class PoiRecord < Record
       address_data << parse_default_addresses(xml_part)
       address_data << parse_tour_address(xml_part, "tourStart")
       address_data << parse_tour_address(xml_part, "tourEnd")
+      address_data.compact.flatten
     end
 
     def parse_default_addresses(xml_part)
       address_data = xml_part.xpath("addresses/address").inject([]) do |memo, address|
         coordinates = address.xpath("coordinates/coordinate[@cos='latlng']").first
+        lat = coordinates.try(:at_xpath, "x").try(:text)
+        lng = coordinates.try(:at_xpath, "y").try(:text)
+
         addr = {
           addition: address.at_xpath("addition").try(:text),
           city: address.at_xpath("location").try(:text),
           street: address.at_xpath("street").try(:text),
           zip: address.at_xpath("zip").try(:text),
-          kind: "default",
-          geoLocation: {
-            lat: coordinates.at_xpath("x").try(:text),
-            lng: coordinates.at_xpath("y").try(:text)
-          }
+          kind: "default"
         }
+
+        addr[:geo_location] = geo_location_input(lat, lng) if lat.present? && lng.present?
         memo << addr
       end
 
@@ -174,7 +178,7 @@ class PoiRecord < Record
 
     def parse_tour_address(xml_part, node)
       tour_node = get_tour(xml_part)
-      return {} unless tour_node.present?
+      return unless tour_node.present?
 
       case node
       when "tourStart"
@@ -185,17 +189,19 @@ class PoiRecord < Record
 
       address = tour_node.xpath(node)
       coordinates = address.xpath("coordinates/coordinate[@cos='latlng']").first
-      {
+      lat = coordinates.try(:at_xpath, "x").try(:text)
+      lng = coordinates.try(:at_xpath, "y").try(:text)
+
+      return_value = {
         addition: address.at_xpath("addition").try(:text),
         city: address.at_xpath("location").try(:text),
         street: address.at_xpath("street").try(:text),
         zip: address.at_xpath("zip").try(:text),
-        kind: kind,
-        geoLocation: {
-          lat: coordinates.at_xpath("x").try(:text),
-          lng: coordinates.at_xpath("y").try(:text)
-        }
+        kind: kind
       }
+
+      return_value[:geo_location] = geo_location_input(lat, lng) if lat.present? && lng.present?
+      return_value
     end
 
     def parse_geometry_tour_data(xml_part)
@@ -251,10 +257,13 @@ class PoiRecord < Record
         when "telefax"
           contact[:fax] = con_value
         when "email"
-          contact[:mail] = con_value
+          contact[:email] = con_value
         when "url", "urlInformation", "urlVideo", "urlVideopreview", "urlSocialmedia"
-          contact[:urls] = [] if contact[:urls].blank?
-          contact[:urls] << { url: con_value, description: con_type }
+          contact[:webUrls] = [] if contact[:webUrls].blank?
+          contact[:webUrls] << {
+            url: add_missing_protocol(con_value),
+            description: con_type
+          }
         when "person"
           contact[:last_name] = con_value
         end
@@ -265,8 +274,11 @@ class PoiRecord < Record
 
     # vendorAddress im TMB XML
     def parse_operating_company(xml_part)
+      name = xml_part.at_xpath("vendorAddress/addition").try(:text)
+      return if name.blank?
+
       {
-        name: "",
+        name: name,
         address: {
           addition: xml_part.at_xpath("vendorAddress/addition").try(:text),
           city: xml_part.at_xpath("vendorAddress/location").try(:text),
@@ -286,18 +298,24 @@ class PoiRecord < Record
       return {} if location.blank?
 
       coordinates = location.xpath("coordinates/coordinate[@cos='latlng']").first
+      lat = coordinates.try(:at_xpath, "x").try(:text)
+      lng = coordinates.try(:at_xpath, "y").try(:text)
 
-      {
+      return_value = {
         name: location.attributes["name"].try(:value),
         department: department_name_for_location(location),
         district: district_name_for_location(location),
-        region: region_name_for_location(location),
-        state: state_for_location(location),
-        country: "Germany",
-        geoLocation: {
-          lat: coordinates.try(:at_xpath, "x").try(:text),
-          lng: coordinates.try(:at_xpath, "y").try(:text)
-        }
+        state: state_for_location(location)
+      }
+
+      return_value[:geo_location] = geo_location_input(lat, lng) if lat.present? && lng.present?
+      return_value
+    end
+
+    def geo_location_input(latitude, longitude)
+      {
+        latitude: latitude.to_f,
+        longitude: longitude.to_f
       }
     end
 
@@ -421,6 +439,11 @@ class PoiRecord < Record
         description: "Barrierefreiheits-Informationen verfügbar",
         url: "http://www.barrierefrei-brandenburg.de/index.php?id=dsview&tx_tmbpoisearch_pi2[poi]=#{poi_id}"
       }
+    end
+
+    def add_missing_protocol(url)
+      return if url.blank?
+      url.start_with?('www') ? 'http://' + url : url
     end
 end
 
