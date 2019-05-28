@@ -77,7 +77,7 @@ class PoiRecord < Record
       tags: parse_tags(tour),
       certificates: parse_certificates(tour),
       accessibility_information: parse_accessibility(tour),
-      length_km: parse_length_km(tour),
+      length_km: parse_length_km(tour).to_i,
       geometry_tour_data: parse_geometry_tour_data(tour)
     }
 
