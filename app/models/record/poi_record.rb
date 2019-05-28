@@ -307,6 +307,7 @@ class PoiRecord < Record
         name: location.attributes["name"].try(:value),
         department: department_name_for_location(location),
         district: district_name_for_location(location),
+        region_name: region_name_for_location(location),
         state: state_for_location(location)
       }
 
