@@ -23,7 +23,7 @@ class Record < ApplicationRecord
   def data_provider(current_user)
     return {} if current_user.blank?
 
-    current_user.fetch(:data_provider, {})
+    current_user.fetch("data_provider", {})
   end
 end
 
