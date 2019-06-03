@@ -381,11 +381,11 @@ class PoiRecord < Record
       xml_part.xpath("price/pricerangecomplex").each do |price|
         price_data << {
           category: category_name_for_price(price),
-          price: price.at_xpath("price").try(:text),
-          agefrom: price.at_xpath("agefrom").try(:text),
-          ageto: price.at_xpath("ageto").try(:text),
+          amount: price.at_xpath("price").try(:text),
+          age_from: price.at_xpath("agefrom").try(:text),
+          age_to: price.at_xpath("ageto").try(:text),
           description: price.at_xpath("description").try(:text),
-          groupprice: price.at_xpath("groupprice").try(:text),
+          group_price: price.at_xpath("groupprice").try(:text),
           max_adult_count: price.at_xpath("adultcount").try(:text),
           max_children_count: price.at_xpath("childrencount").try(:text)
         }
