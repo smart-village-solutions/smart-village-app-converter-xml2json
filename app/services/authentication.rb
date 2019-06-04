@@ -5,24 +5,15 @@ class Authentication
     @setting = Setting.new
   end
 
-  def load_access_tokens(code: nil, grant_type: "authorization_code")
+  def load_access_tokens
     auth_server = Rails.application.credentials.auth_server[:url]
     uri = Addressable::URI.parse("#{auth_server}/oauth/token")
     uri.query_values = {
       client_id: Rails.application.credentials.auth_server[:key],
       client_secret: Rails.application.credentials.auth_server[:secret],
       redirect_uri: Rails.application.credentials.auth_server[:callback_url],
-      grant_type: grant_type
+      grant_type: "client_credentials"
     }
-
-    case grant_type
-    when "authorization_code"
-      auth_code = { code: code }
-    when "refresh_token"
-      auth_code = { refresh_token: setting.config["oauth"]["refresh_token"] }
-    end
-
-    uri.query_values = uri.query_values.merge(auth_code)
 
     result = ApiRequestService.new(uri.to_s, nil, nil, uri.query_values).post_request
 
