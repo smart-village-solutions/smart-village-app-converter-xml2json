@@ -14,11 +14,15 @@ class Record < ApplicationRecord
   end
 
   def geo_location_input(latitude, longitude)
-  {
-    latitude: latitude.to_f,
-    longitude: longitude.to_f
-  }
-end
+    {
+      latitude: latitude.to_f,
+      longitude: longitude.to_f
+    }
+  end
+
+  def is_true?(value)
+    [1, true, '1', 'true'].include?(value)
+  end
 end
 
 # == Schema Information

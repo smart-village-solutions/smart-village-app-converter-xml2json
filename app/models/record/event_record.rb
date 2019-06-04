@@ -73,7 +73,7 @@ class EventRecord < Record
         date_end: event.at_xpath("E_DATUM_BIS").try(:text),
         time_end: event.at_xpath("E_ZEIT_BIS").try(:text),
         time_description: event.at_xpath("E_ZEIT_TEXT").try(:text),
-        use_only_time_description: [1, true, '1', 'true'].include?(event.at_xpath("E_NODATES").try(:text).try(:downcase))
+        use_only_time_description: is_true?(event.at_xpath("E_NODATES").try(:text).try(:downcase))
       }
     ]
   end
