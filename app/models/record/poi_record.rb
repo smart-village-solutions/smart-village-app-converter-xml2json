@@ -86,10 +86,6 @@ class PoiRecord < Record
 
   private
 
-    def is_true?(value)
-      [1, true, '1', 'true'].include?(value)
-    end
-
     # Parsing poi data for tag information
     #
     # @param [XML] XML part of an poi
@@ -389,7 +385,7 @@ class PoiRecord < Record
 
         price_data << {
           category: category_name_for_price(price),
-          amount: amount.present? ? amount.to_f : nil,
+          amount: amount.present? ? amount.delete(".").sub(",", ".").to_f : nil,
           age_from: age_from.present? ? age_from.to_i : nil,
           age_to: age_to.present? ? age_to.to_i : nil,
           description: price.at_xpath("description").try(:text),
