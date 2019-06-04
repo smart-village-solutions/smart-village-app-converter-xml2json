@@ -1,12 +1,5 @@
 class Record < ApplicationRecord
-  attr_accessor :current_user
-
   audited only: :updated_at
-
-  def initialize(current_user: nil)
-    @current_user = current_user
-    super
-  end
 
   def load_xml_data
     raise "Abstract Method"
@@ -18,12 +11,6 @@ class Record < ApplicationRecord
 
   def convert_xml_to_hash
     raise "Abstract Method"
-  end
-
-  def data_provider(current_user)
-    return {} if current_user.blank?
-
-    current_user.fetch("data_provider", {})
   end
 
   def geo_location_input(latitude, longitude)

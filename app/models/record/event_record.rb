@@ -43,7 +43,6 @@ class EventRecord < Record
       addresses: parse_address(event),
       contacts: parse_contact(event),
       location: parse_location(event),
-      data_provider: data_provider(@current_user),
       media_contents: parse_media_content(event)
     }
 

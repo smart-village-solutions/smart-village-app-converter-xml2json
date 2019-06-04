@@ -4,7 +4,7 @@ RSpec.describe PoiRecord, type: :model do
   describe "import" do
     let(:xml_raw_data) { File.read("doc/tmb.xml") }
     let(:poi_hash) { JSON.parse(File.read("doc/pois_tours.json")) }
-    let(:poi) { PoiRecord.new(current_user: nil) }
+    let(:poi) { PoiRecord.new }
 
     it "stores a xml in xml_data" do
       poi.xml_data = xml_raw_data
