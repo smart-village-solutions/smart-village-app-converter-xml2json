@@ -1,5 +1,5 @@
 class Importer
-  attr_accessor :access_token, :record_type, :current_user
+  attr_accessor :access_token, :record_type
 
   # Steps for Importer
   # - Load Login Credentials from server
@@ -9,36 +9,19 @@ class Importer
   # - save response from server an log it
   # - send notifications
   def initialize(record_type)
-    load_user_data
-
-    if @current_user.present?
-      @record_type = record_type
-      @record = new_record
-      @record.load_xml_data
-      @record.convert_xml_to_hash
-      send_json_to_server
-    end
+    @record_type = record_type
+    @record = new_record
+    @record.load_xml_data
+    @record.convert_xml_to_hash
+    send_json_to_server
   end
 
   def new_record
     case @record_type
     when :poi
-      PoiRecord.new(current_user: @current_user)
+      PoiRecord.new
     when :event
-      EventRecord.new(current_user: @current_user)
-    end
-  end
-
-  def load_user_data
-    access_token = Authentication.new.access_token
-    base_url = Rails.application.credentials.auth_server[:url]
-    url = "#{base_url}/data_provider.json"
-
-    begin
-      result = ApiRequestService.new(url, nil, nil, nil, {Authorization: "Bearer #{access_token}"}).get_request
-      @current_user = JSON.parse(result.body)
-    rescue => e
-      @current_user = { data_provider: {} }
+      EventRecord.new
     end
   end
 

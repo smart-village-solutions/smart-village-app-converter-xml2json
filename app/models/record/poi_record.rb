@@ -45,7 +45,6 @@ class PoiRecord < Record
       description: poi.xpath("description/text").try(:text),
       mobile_description: poi.xpath("descriptionMobileSingle/text").try(:text),
       category_name: parse_categories(poi).first,
-      data_provider: data_provider(@current_user),
       addresses: parse_addresses(poi),
       contact: parse_contact(poi.xpath("connections")),
       location: parse_location(poi),
@@ -69,7 +68,6 @@ class PoiRecord < Record
       description: tour.xpath("description/text").try(:text),
       mobile_description: tour.xpath("descriptionMobileSingle/text").try(:text),
       category_name: parse_categories(tour).first,
-      data_provider: data_provider(@current_user),
       addresses: parse_addresses(tour),
       contact: parse_contact(tour.xpath("connections")),
       location: parse_location(tour),
@@ -379,15 +377,21 @@ class PoiRecord < Record
     def parse_prices(xml_part)
       price_data = []
       xml_part.xpath("price/pricerangecomplex").each do |price|
+        amount = price.at_xpath("price").try(:text)
+        age_from = price.at_xpath("agefrom").try(:text)
+        age_to = price.at_xpath("ageto").try(:text)
+        max_adult_count = price.at_xpath("adultcount").try(:text)
+        max_children_count = price.at_xpath("childrencount").try(:text)
+
         price_data << {
           category: category_name_for_price(price),
-          price: price.at_xpath("price").try(:text),
-          agefrom: price.at_xpath("agefrom").try(:text),
-          ageto: price.at_xpath("ageto").try(:text),
+          amount: amount.present? ? amount.delete(".").sub(",", ".").to_f : nil,
+          age_from: age_from.present? ? age_from.to_i : nil,
+          age_to: age_to.present? ? age_to.to_i : nil,
           description: price.at_xpath("description").try(:text),
-          groupprice: price.at_xpath("groupprice").try(:text),
-          max_adult_count: price.at_xpath("adultcount").try(:text),
-          max_children_count: price.at_xpath("childrencount").try(:text)
+          group_price: is_true?(price.at_xpath("groupprice").try(:text)),
+          max_adult_count: max_adult_count.present? ? max_adult_count.to_i : nil,
+          max_children_count: max_children_count.present? ? max_children_count.to_i : nil
         }
       end
 
@@ -416,7 +420,7 @@ class PoiRecord < Record
           date_to: opening_day.at_xpath("dateto").try(:text),
           time_from: opening_day.at_xpath("timefrom").try(:text),
           time_to: opening_day.at_xpath("timeto").try(:text),
-          open: [1, true, '1', 'true'].include?(opening_day.at_xpath("open").try(:text).try(:downcase)),
+          open: is_true?(opening_day.at_xpath("open").try(:text).try(:downcase)),
           sort_number: index
         }
       end
