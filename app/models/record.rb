@@ -21,7 +21,7 @@ class Record < ApplicationRecord
   end
 
   def is_true?(value)
-    [1, true, '1', 'true'].include?(value)
+    [1, true, '1', 'true', 't'].include?(value)
   end
 end
 
