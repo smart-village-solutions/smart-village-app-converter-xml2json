@@ -415,7 +415,7 @@ class PoiRecord < Record
       opening_hours = []
       xml_part.xpath("openinghours/openingtimedate").each_with_index do |opening_day, index|
         opening_hours << {
-          weekday: opening_day.at_xpath("weekday").try(:text),
+          weekday: Translation.weekdays(opening_day),
           date_from: opening_day.at_xpath("datefrom").try(:text),
           date_to: opening_day.at_xpath("dateto").try(:text),
           time_from: opening_day.at_xpath("timefrom").try(:text),
