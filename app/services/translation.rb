@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 class Translation
-  def self.weekdays(opening_day)
-    day = opening_day.at_xpath("weekday").try(:text)
+  def self.weekdays(day)
+    return "" if day.blank?
 
     case day
     when "monday"
