@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 class Translation
-  def self.price_category(price)
-    price = price.at_xpath("category").try(:text)
-
-    case price
+   # Bei Auswahl der Kategorien „other“ und „discount“ wird hier die Kategorie frei benannt:
+  # category wird dann gesetzt durch den Wert von categorytext
+  def self.price_category(price_category, category_text)
+    case price_category
     when "children"
       "Kinder"
     when "adult"
@@ -18,7 +18,7 @@ class Translation
     when "reduced"
       "Ermäßigt"
     when "discount", "other"
-      price.at_xpath("categorytext").try(:text)
+      category_text
     end
   end
 end
