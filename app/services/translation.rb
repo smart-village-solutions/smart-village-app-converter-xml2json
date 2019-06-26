@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Translation
-  def self.weekdays(day)
+  def self.weekday(day)
     return "" if day.blank?
 
     case day
