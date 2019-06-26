@@ -3,7 +3,7 @@
 class Translation
   # Bei Auswahl der Kategorien „other“ und „discount“ wird hier die Kategorie frei benannt:
   # category wird dann gesetzt durch den Wert von categorytext
-  def self.price_category(price_category, category_text)3
+  def self.price_category(price_category, category_text)
     case price_category
     when "children"
       "Kinder"
