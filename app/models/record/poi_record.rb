@@ -398,17 +398,12 @@ class PoiRecord < Record
       price_data
     end
 
-    # Bei Auswahl der Kategorien „other“ und „discount“ wird hier die Kategorie frei benannt:
-    # category wird dann gesetzt durch den Wert von categorytext
+   # Methode übergibt den wert der in pricecategory steht an die Translation Service Klasse,
+   # die den englischen Kategorienamen ins Deutsche übersetzt.
     def category_name_for_price(price)
-      xml_cat_name = price.at_xpath("category").try(:text)
-
-      case xml_cat_name
-      when "discount", "other"
-        price.at_xpath("categorytext").try(:text)
-      else
-        xml_cat_name
-      end
+      price_category = price.at_xpath("category").try(:text)
+      category_text = price.at_xpath("categorytext").try(:text)
+      Translation.price_category(price_category, category_text)
     end
 
     def parse_opening_hours(xml_part)
