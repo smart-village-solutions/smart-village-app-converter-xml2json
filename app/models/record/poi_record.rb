@@ -49,7 +49,7 @@ class PoiRecord < Record
       contact: parse_contact(poi.xpath("connections")),
       location: parse_location(poi),
       media_contents: parse_media_contents(poi),
-      prices: parse_prices(poi),
+      price_informations: parse_price_informations(poi),
       opening_hours: parse_opening_hours(poi),
       tags: parse_tags(poi),
       certificates: parse_certificates(poi),
@@ -374,7 +374,7 @@ class PoiRecord < Record
       }
     end
 
-    def parse_prices(xml_part)
+    def parse_price_informations(xml_part)
       price_data = []
       xml_part.xpath("price/pricerangecomplex").each do |price|
         amount = price.at_xpath("price").try(:text)
