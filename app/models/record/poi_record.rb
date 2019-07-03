@@ -40,7 +40,6 @@ class PoiRecord < Record
 
   def parse_single_poi_from_xml(poi)
     poi_data = {
-      external_id: poi.attributes["id"].try(:value),
       name: poi.attributes["name"].try(:value),
       description: poi.xpath("description/text").try(:text),
       mobile_description: poi.xpath("descriptionMobileSingle/text").try(:text),
@@ -63,7 +62,6 @@ class PoiRecord < Record
 
   def parse_single_tour_from_xml(tour)
     tour_data = {
-      external_id: tour.attributes["id"].try(:value),
       name: tour.attributes["name"].try(:value),
       description: tour.xpath("description/text").try(:text),
       mobile_description: tour.xpath("descriptionMobileSingle/text").try(:text),
