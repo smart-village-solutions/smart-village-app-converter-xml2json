@@ -23,7 +23,7 @@ class PoiRecord < Record
   def convert_xml_to_hash
     poi_data = []
     tour_data = []
-
+    
     @xml_doc = Nokogiri.XML(xml_data)
     @xml_doc.remove_namespaces!
     @base_file_url = @xml_doc.at_xpath("/result/@fileUrl").try(:value)
@@ -41,8 +41,8 @@ class PoiRecord < Record
   def parse_single_poi_from_xml(poi)
     poi_data = {
       name: poi.attributes["name"].try(:value),
-      description: poi.xpath("description/text").try(:text),
-      mobile_description: poi.xpath("descriptionMobileSingle/text").try(:text),
+      description: poi.xpath("description/text/div").try(:to_s),
+      mobile_description: poi.xpath("descriptionMobileSingle/text/div").try(:to_s),
       category_name: parse_categories(poi).first,
       addresses: parse_addresses(poi),
       contact: parse_contact(poi.xpath("connections")),
@@ -63,8 +63,8 @@ class PoiRecord < Record
   def parse_single_tour_from_xml(tour)
     tour_data = {
       name: tour.attributes["name"].try(:value),
-      description: tour.xpath("description/text").try(:text),
-      mobile_description: tour.xpath("descriptionMobileSingle/text").try(:text),
+      description: tour.xpath("description/text/div").try(:to_s),
+      mobile_description: tour.xpath("descriptionMobileSingle/text/div").try(:to_s),
       category_name: parse_categories(tour).first,
       addresses: parse_addresses(tour),
       contact: parse_contact(tour.xpath("connections")),
