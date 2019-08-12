@@ -19,7 +19,7 @@ env :BUNDLE_PATH, '/usr/local/bundle'
 env :GEM_HOME, '/usr/local/bundle'
 env :BUNDLE_APP_CONFIG, '/usr/local/bundle'
 
-every 10.minutes do
+every 30.minutes do
   runner "Importer.new(:poi)"
   runner "Importer.new(:event)"
 end
