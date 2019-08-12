@@ -23,7 +23,7 @@ class PoiRecord < Record
   def convert_xml_to_hash
     poi_data = []
     tour_data = []
-    
+
     @xml_doc = Nokogiri.XML(xml_data)
     @xml_doc.remove_namespaces!
     @base_file_url = @xml_doc.at_xpath("/result/@fileUrl").try(:value)
@@ -88,10 +88,10 @@ class PoiRecord < Record
     #
     # @param [XML] XML part of an poi
     #
-    # @return [Array] List of names of certificates of xml-data
+    # @return [Array] Array of Certificate Objects
     def parse_certificates(xml_part)
       cert_ids = xml_part.xpath("certificates/classification/@id").map(&:value)
-      cert_ids.map { |c| find_certificate_by_id(c) }
+      cert_ids.map { |c| find_certificate_by_id(c) }.compact
     end
 
     # Search XML for matching Certificates
@@ -101,9 +101,10 @@ class PoiRecord < Record
     # @return [String] Name of certificate found in xml
     def find_certificate_by_id(cert_id)
       cert_node = @xml_doc.xpath("/result/classification[@id='#{cert_id}']").first
-      return "" if cert_node.blank?
+      return nil if cert_node.blank?
 
-      cert_node.attributes["name"].try(:value)
+      certificate_name = cert_node.attributes["name"].try(:value)
+      { name: certificate_name }
     end
 
     # Parsing poi data for tag information
@@ -354,13 +355,12 @@ class PoiRecord < Record
       xml_part.xpath("gallery/file/@id").each do |file_id|
         media_data << parse_file_for_id(file_id, "image")
       end
-
       media_data
     end
 
     def parse_file_for_id(file_id, file_type)
       file = @xml_doc.xpath("/result/file[@id='#{file_id}']").first
-      return {} if file.blank?
+      return default_media_content if file.blank?
 
       {
         source_url: {
@@ -369,6 +369,17 @@ class PoiRecord < Record
         },
         caption_text: file.at_xpath("alt").try(:text),
         content_type: file_type
+      }
+    end
+
+    def default_media_content
+      {
+        source_url: {
+          url: "",
+          description: "description"
+        },
+        caption_text: "",
+        content_type: "image"
       }
     end
 
@@ -396,8 +407,8 @@ class PoiRecord < Record
       price_data
     end
 
-   # Methode übergibt den wert der in pricecategory steht an die Translation Service Klasse,
-   # die den englischen Kategorienamen ins Deutsche übersetzt.
+    # Methode übergibt den wert der in pricecategory steht an die Translation Service Klasse,
+    # die den englischen Kategorienamen ins Deutsche übersetzt.
     def category_name_for_price(price)
       price_category = price.at_xpath("category").try(:text)
       category_text = price.at_xpath("categorytext").try(:text)
@@ -430,13 +441,16 @@ class PoiRecord < Record
       poi_id = xml_part.attributes["id"].try(:value)
       {
         description: "Barrierefreiheits-Informationen verfügbar",
-        url: "http://www.barrierefrei-brandenburg.de/index.php?id=dsview&tx_tmbpoisearch_pi2[poi]=#{poi_id}"
+        urls: [{
+          url: "http://www.barrierefrei-brandenburg.de/index.php?id=dsview&tx_tmbpoisearch_pi2[poi]=#{poi_id}",
+          description: "Informationen zur Barrierefreiheit finden sie unter diesem Link"}]
       }
     end
 
     def add_missing_protocol(url)
       return if url.blank?
-      url.start_with?('www') ? 'http://' + url : url
+
+      url.start_with?("www") ? "http://" + url : url
     end
 end
 
