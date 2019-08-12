@@ -19,9 +19,9 @@ env :BUNDLE_PATH, '/usr/local/bundle'
 env :GEM_HOME, '/usr/local/bundle'
 env :BUNDLE_APP_CONFIG, '/usr/local/bundle'
 
-every 30.minutes do
+every 5.minutes do
   runner "Importer.new(:poi)"
-  runner "Importer.new(:event)"
+  #runner "Importer.new(:event)"
 end
 
 # Learn more: http://github.com/javan/whenever
