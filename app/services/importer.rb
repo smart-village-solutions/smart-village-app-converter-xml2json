@@ -30,7 +30,7 @@ class Importer
     url = Rails.application.credentials.target_server[:url]
 
     begin
-      result = ApiRequestService.new(url, nil, nil, @record.json_data, {Authorization: "Bearer #{access_token}"}).post_request
+      result = ApiRequestService.new(url, nil, nil, @record.json_data, { Authorization: "Bearer #{access_token}" }).post_request
       @record.update(updated_at: Time.now, audit_comment: result.body)
     rescue => e
       @record.update(updated_at: Time.now, audit_comment: e)

@@ -28,6 +28,8 @@ class PoiRecord < Record
     @xml_doc.remove_namespaces!
     @base_file_url = @xml_doc.at_xpath("/result/@fileUrl").try(:value)
     @xml_doc.xpath("/result/poi").each do |xml_poi|
+      next if record_invalid?(xml_poi)
+
       if xml_poi.xpath("tours/tour").present?
         tour_data << parse_single_tour_from_xml(xml_poi)
       else
@@ -83,6 +85,19 @@ class PoiRecord < Record
   end
 
   private
+
+
+    # Prüfe anhand der Daten ob der Eintrag importiert werden soll
+    # - Englische Inhalte sollen nicht importiert werden
+    #
+    # @param [Nokogiri::Node] xml_poi Ein Knoten im XML Dokument
+    #
+    # @return [Boolean] true wenn der Eintrag nicht importiert werden soll
+    def record_invalid?(xml_poi)
+      return true if xml_poi.attributes["language"] == "en"
+
+      false
+    end
 
     # Parsing poi data for tag information
     #
