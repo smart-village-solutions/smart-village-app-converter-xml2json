@@ -32,6 +32,7 @@ class EventRecord < Record
   def parse_single_event_from_xml(event)
     event_data = {
       title: event.at_xpath("E_TITEL").try(:text),
+      external_id: event.at_xpath("E_ID").try(:text),
       description: event.at_xpath("E_BESCHREIBUNG").try(:text),
       price_informations: [{ description: event.at_xpath("E_PREISTEXT").try(:text) }],
       category_name: event.at_xpath("KATEGORIE_NAME_D").try(:text),
