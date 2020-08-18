@@ -12,6 +12,10 @@ services:
         target: /app/config/database.yml
       - source: smart-village-app-converter-xml2json-unicorn-rb
         target: /app/config/unicorn.rb
+      - source: bad-belzig-tmb-importer-master-key
+        target: /app/config/master.key
+      - source: bad-belzig-tmb-importer-production-key
+        target: /app/config/credentials/production.key
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - unicorn:/unicorn
@@ -74,6 +78,10 @@ configs:
   smart-village-app-converter-xml2json-database-yml:
     external: true
   smart-village-app-converter-xml2json-unicorn-rb:
+    external: true
+  bad-belzig-tmb-importer-master-key:
+    external: true
+  bad-belzig-tmb-importer-production-key:
     external: true
 
 networks:

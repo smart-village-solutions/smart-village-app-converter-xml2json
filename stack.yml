@@ -1,0 +1,35 @@
+version: '3.7'
+
+services:
+  app:
+    image: registry.gitlab.tpwd.de/ikusei/smart-village-app-converter-xml2json
+    networks:
+      - default
+      - logs
+    environment:
+      RAILS_ENV: production
+      RAILS_LOG_TO_STDOUT: 1
+
+  nginx:
+    deploy:
+      labels:
+        traefik.enable: "true"
+        traefik.port: 80
+        traefik.docker.network: public
+        traefik.frontend.rule: Host:tmb.bad-belzig.smart-village-app.tpwd.de
+        # traefik.frontend.rule: Host:tmb.bad-belzig.smart-village.app
+
+  db:
+    networks:
+      default:
+      adminer:
+        aliases:
+          - bb-bad-belzig-tmb-importer
+
+networks:
+  adminer:
+    external: true
+  logs:
+    external: true
+  public:
+    external: true
