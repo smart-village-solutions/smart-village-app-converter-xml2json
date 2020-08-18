@@ -4,7 +4,7 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby "2.7.1"
 
 # Bundle edge Rails instead: gem "rails", github: "rails/rails"
-gem "rails", "~> 6.0.0.rc1"
+gem "rails", "~> 6.0.3.2"
 # Use postgresql as the database for Active Record
 gem "pg", ">= 0.18", "< 2.0"
 # Use Puma as the app server
@@ -45,7 +45,6 @@ group :development do
   gem "rb-readline"
   gem "spring-watcher-listen", "~> 2.0.0"
   gem "spring"
-  gem "byebug", platforms: %i[mri mingw x64_mingw]
   gem "codeclimate-test-reporter"
   gem "database_cleaner"
   gem "factory_bot_rails"
