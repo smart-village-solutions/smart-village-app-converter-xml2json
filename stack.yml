@@ -9,14 +9,17 @@ services:
     environment:
       RAILS_ENV: production
       RAILS_LOG_TO_STDOUT: 1
-
-  nginx:
     deploy:
       labels:
         traefik.enable: "true"
         traefik.port: 80
         traefik.docker.network: public
-        traefik.frontend.rule: Host:tmb.bad-belzig.smart-village.app,tmb.bad-belzig.smart-village-app.tpwd.de
+        traefik.main.frontend.rule: Host:tmb.bad-belzig.smart-village.app
+        traefik.main.frontend.passHostHeader: "true"
+        traefik.main.frontend.redirect.entryPoint: https
+        traefik.api.frontend.rule: Host:tmb.bad-belzig.smart-village.app
+        traefik.api.frontend.passHostHeader: "true"
+        traefik.api.frontend.redirect.entryPoint: https
 
   db:
     networks:

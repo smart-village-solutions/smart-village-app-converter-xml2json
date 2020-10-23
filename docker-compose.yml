@@ -10,7 +10,7 @@ services:
     configs:
       - source: smart-village-app-converter-xml2json-database-yml
         target: /app/config/database.yml
-      - source: smart-village-app-converter-xml2json-unicorn-rb
+      - source: unicorn-5-worker
         target: /app/config/unicorn.rb
       - source: bad-belzig-tmb-importer-master-key
         target: /app/config/master.key
@@ -25,26 +25,14 @@ services:
       restart_policy:
         condition: on-failure
 
-  nginx:
-    image: nginx
-    depends_on: [app]
-    networks: [default, public]
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - unicorn:/unicorn
-      - assets:/public
-    labels:
-      - traefik.docker.network=public
-    deploy:
-      restart_policy:
-        condition: on-failure
-
   db:
-    image: postgres
+    image: 'postgres:10.3-alpine'
     environment:
       POSTGRES_USER: smart
       POSTGRES_PASSWORT: smart
       POSTGRES_DB: smart
+    networks:
+      public:
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - db:/var/lib/postgresql/data
@@ -77,7 +65,7 @@ configs:
     external: true
   smart-village-app-converter-xml2json-database-yml:
     external: true
-  smart-village-app-converter-xml2json-unicorn-rb:
+  unicorn-5-worker:
     external: true
   bad-belzig-tmb-importer-master-key:
     external: true

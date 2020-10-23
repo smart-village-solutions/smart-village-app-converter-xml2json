@@ -13,11 +13,13 @@ set :output, "/var/log/cron.log"
 #   rake "some:great:rake:task"
 # end
 #
-set :environment, ENV['RAILS_ENV']
-env :PATH, ENV['PATH']
-env :BUNDLE_PATH, '/usr/local/bundle'
-env :GEM_HOME, '/usr/local/bundle'
-env :BUNDLE_APP_CONFIG, '/usr/local/bundle'
+# set :environment, ENV['RAILS_ENV']
+# env :PATH, ENV['PATH']
+# env :BUNDLE_PATH, '/usr/local/bundle'
+# env :GEM_HOME, '/usr/local/bundle'
+# env :BUNDLE_APP_CONFIG, '/usr/local/bundle'
+set :job_template, "/bin/sh -l -c ':job'"
+set :environment, ENV["RAILS_ENV"]
 
 every 1.day do
   runner "Importer.new(:poi)"
