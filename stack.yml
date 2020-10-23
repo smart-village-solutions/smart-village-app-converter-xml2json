@@ -17,7 +17,7 @@ services:
         traefik.main.frontend.rule: Host:tmb.bad-belzig.smart-village.app,tmb.common.smart-village.app
         traefik.main.frontend.passHostHeader: "true"
         traefik.main.frontend.redirect.entryPoint: https
-        traefik.api.frontend.rule: Host:tmb.bad-belzig.smart-village.app
+        traefik.api.frontend.rule: Host:tmb.bad-belzig.smart-village.app,tmb.common.smart-village.app
         traefik.api.frontend.passHostHeader: "true"
         traefik.api.frontend.redirect.entryPoint: https
 
