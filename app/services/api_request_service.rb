@@ -20,7 +20,7 @@ class ApiRequestService
     @request = nil
   end
 
-  def get_request(content_type_xml = false, pem = nil)
+  def get_request(content_type_xml = false, pem = nil, password = nil)
     uri = Addressable::URI.parse(@uri.strip).normalize
 
     uri.query = [uri.query, URI.encode_www_form(@params)].join("&") if @params && @params.any?
@@ -48,7 +48,7 @@ class ApiRequestService
       http.verify_mode = OpenSSL::SSL::VERIFY_NONE
       if pem.present?
         http.cert = OpenSSL::X509::Certificate.new(pem)
-        http.key = OpenSSL::PKey::RSA.new(pem)
+        http.key = OpenSSL::PKey::RSA.new(pem, password)
       end
     end
 

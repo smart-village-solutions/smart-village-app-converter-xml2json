@@ -1,0 +1,111 @@
+<poi type=\"poi\" id=\"11265\" language=\"de\" revision=\"1\" name=\"Marmorpalais im Neuen Garten\" tstamp=\"1597391434\">
+  <addresses type=\"array\">
+    <address type=\"address\">
+      <location type=\"varchar\">Potsdam</location>
+      <zip type=\"varchar\">14469</zip>
+      <street type=\"varchar\">Im Neuen Garten 10</street>
+      <coordinates type=\"array\">
+        <coordinate type=\"coordinate\" cos=\"utm33\">
+          <x type=\"varchar\">3368678</x>
+          <y type=\"varchar\">5808718</y>
+          <type type=\"coordinateType\">utm33</type>
+        </coordinate>
+        <coordinate type=\"coordinate\" cos=\"latlng\">
+          <x type=\"varchar\">52.412904974545</x>
+          <y type=\"varchar\">13.069187342889</y>
+          <type type=\"coordinateType\">latlng</type>
+        </coordinate>
+      </coordinates>
+    </address>
+  </addresses>
+  <connections type=\"array\">
+    <connection type=\"connection\">
+      <type type=\"connectionType\">telefon</type>
+      <information type=\"text\">0331-9694200</information>
+    </connection>
+    <connection type=\"connection\">
+      <type type=\"connectionType\">telefax</type>
+      <information type=\"text\">0331-9694107</information>
+    </connection>
+    <connection type=\"connection\">
+      <type type=\"connectionType\">email</type>
+      <information type=\"text\">info@spsg.de</information>
+    </connection>
+    <connection type=\"connection\">
+      <type type=\"connectionType\">url</type>
+      <information type=\"text\">http://www.spsg.de/marmorpalais</information>
+    </connection>
+    <connection type=\"connection\">
+      <type type=\"connectionType\">urlInformation</type>
+      <information type=\"text\">http://www.potsdam.tomis.mobi/neuer_garten_und_marmorpalais</information>
+    </connection>
+  </connections>
+  <categories type=\"array\">
+    <classification type=\"classification_category_poi\" id=\"5497\"/>
+    <classification type=\"classification_category_poi\" id=\"5489\"/>
+  </categories>
+  <description type=\"rte\">
+    <text type=\"text\">
+      <div class=\"text\">König Friedrich Wilhelm II. ließ das Marmorpalais 1787 - 1793 als Sommerresidenz errichten und mit schlesischem Marmor verkleiden. Es wurde innerhalb drei Jahren im strengen frühklassizistischen Stil erbaut und 1793 fertig gestellt. Die architektonische Planung des Schlosses wurde 1787 erstmals von Carl von Gontard und später von Carl Gotthard Langhans übernommen, der auch das berühmte Brandenburger Tor in Berlin plante.<br/><br/>
+Nach dem Tod Friedrich Wilhelm II. diente das Schloss mehrmals als Residenzschloss für Mitglieder des Hauses Hohenzollern. Bis heute blieb der ursprüngliche Charakter des Interieurs erhalten.<br/><br/>
+1945 fiel das Palais mit dem Park und dem angrenzenden Villenviertel (\"Verbotene Stadt\") unter sowjetische Verwaltung. 1961 übernahm die DDR das Marmorpalais und baute es in ein Armeemuseum um. Zu dieser Zeit war es von Kanonen, einem Flugzeug, einem Schnellboot und anderen Kriegsgeräten umgeben. 1972 zog das Armeemuseum nach Dresden.<br/><br/>
+Heute ist das Schloss neben dem Schloss Cecilienhof die Hauptattraktion im Neuen Garten. Seine Silhouette spiegelt sich im Heiligen See. Von der Ufer-Terrasse des Marmorpalais hat man einen herrlichen Blick auf die Herrenhäuser auf der anderen Seite des Sees.<br/>
+ </div>
+    </text>
+  </description>
+  <location type=\"location\" id=\"2539\"/>
+  <thumbnail type=\"file\" id=\"413824\"/>
+  <gallery type=\"array\">
+    <file type=\"file\" id=\"350969\"/>
+    <file type=\"file\" id=\"422720\"/>
+    <file type=\"file\" id=\"413823\"/>
+    <file type=\"file\" id=\"60104\"/>
+    <file type=\"file\" id=\"60105\"/>
+  </gallery>
+  <hasDatasheet type=\"bool\">false</hasDatasheet>
+  <canonical type=\"varchar\">https://www.reiseland-brandenburg.de/poi/potsdam/schloesser-und-parks/marmorpalais-im-neuen-garten/</canonical>
+  <price type=\"array\">
+    <pricerangecomplex type=\"pricerangecomplex\">
+      <category type=\"pricecategory\">adult</category>
+      <price type=\"text\">6,00</price>
+    </pricerangecomplex>
+    <pricerangecomplex type=\"pricerangecomplex\">
+      <category type=\"pricecategory\">reduced</category>
+      <price type=\"text\">5,00</price>
+    </pricerangecomplex>
+  </price>
+  <otheropeninghours type=\"varchar\">Bis auf Weiteres geschlossen.</otheropeninghours>
+  <tags type=\"array\">
+    <attribute type=\"attribute_tag\" id=\"83077\">
+      <value type=\"text\">true</value>
+    </attribute>
+  </tags>
+  <hasOnlineOrder type=\"bool\">false</hasOnlineOrder>
+  <hasVoucherOrder type=\"bool\">false</hasVoucherOrder>
+</poi>
+
+
+<location type=\"location\" id=\"2539\" name=\"Potsdam\" language=\"de\" revision=\"1\" tstamp=\"1591085595\">
+  <district type=\"array\">
+    <district type=\"district\" id=\"381\"/>
+  </district>
+  <department type=\"array\">
+    <department type=\"department\" id=\"241\"/>
+  </department>
+  <region type=\"array\">
+    <region type=\"region\" id=\"140\"/>
+  </region>
+  <coordinates type=\"array\">
+    <coordinate type=\"coordinate\" cos=\"utm33\">
+      <x type=\"varchar\">3367254</x>
+      <y type=\"varchar\">5807270</y>
+      <type type=\"coordinateType\">utm33</type>
+    </coordinate>
+    <coordinate type=\"coordinate\" cos=\"latlng\">
+      <x type=\"varchar\">52.399550867624</x>
+      <y type=\"varchar\">13.048837868588</y>
+      <type type=\"coordinateType\">latlng</type>
+    </coordinate>
+  </coordinates>
+  <state type=\"state\" id=\"107361\"/>
+</location>

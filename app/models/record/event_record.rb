@@ -7,7 +7,8 @@ class EventRecord < Record
   def load_xml_data
     url = Rails.application.credentials.event_source[:url]
     pem = Rails.application.credentials.tmb_auth[:pem]
-    result = ApiRequestService.new(url).get_request(false, pem)
+    password = Rails.application.credentials.tmb_auth[:password]
+    result = ApiRequestService.new(url).get_request(false, pem, password)
 
     return unless result.code == "200"
     return unless result.body.present?
@@ -18,15 +19,18 @@ class EventRecord < Record
   # Parse XML Data and converts it to a Hash
   #
   # @return [Hash] Hash of events
-  def convert_xml_to_hash
+  def convert_xml_to_hash(name, options)
     event_data = []
     @xml_doc = Nokogiri.XML(xml_data)
     @xml_doc.remove_namespaces!
     @xml_doc.xpath("/brandenburgevents/EVENT").each do |xml_event|
-      event_data << parse_single_event_from_xml(xml_event)
+      location = parse_location(xml_event)
+      next unless record_valid?(xml_event, location, options)
+
+      event_data << parse_single_event_from_xml(xml_event, location)
     end
 
-    self.json_data = { events: event_data }
+    { events: event_data }
   end
 
   def parse_single_event_from_xml(event)
@@ -42,7 +46,7 @@ class EventRecord < Record
       urls: parse_urls(event),
       addresses: parse_address(event),
       contacts: parse_contact(event),
-      location: parse_location(event),
+      location: location,
       media_contents: parse_media_content(event)
     }
 
@@ -159,8 +163,11 @@ class EventRecord < Record
   end
 
   def parse_location(event)
+    byebug
     {
-      region_name: event.at_xpath("REGION_NAME_D").try(:text)
+      region_name: event.at_xpath("REGION_NAME_D").try(:text),
+      departments: event.at_xpath("TMBORTE_NAME").try(:text),
+      district: event.at_xpath("REGION_NAME_D").try(:text),
     }
   end
 
@@ -198,6 +205,12 @@ class EventRecord < Record
     end
 
     image_data
+  end
+
+  def record_valid?(event, location, options)
+    return false if !options[:districts].include?(location[:district]) && !options[:departments].include?(location[:department])
+
+    true
   end
 
 end

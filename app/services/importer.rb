@@ -10,10 +10,22 @@ class Importer
   # - send notifications
   def initialize(record_type)
     @record_type = record_type
+    puts "Record type defined: #{@record_type}"
+
     @record = new_record
+    puts "Record initialized"
+
     @record.load_xml_data
-    @record.convert_xml_to_hash
-    send_json_to_server
+    puts "Data loaded from TMB"
+
+    target_servers = Rails.application.credentials.target_servers
+    target_servers.each do |name, options|
+      puts "Converting Data for #{name}"
+      data_to_send = @record.convert_xml_to_hash(name, options)
+      send_json_to_server(name, options, data_to_send)
+    end
+
+    puts "Data send to all servers"
   end
 
   def new_record
@@ -25,12 +37,13 @@ class Importer
     end
   end
 
-  def send_json_to_server
-    access_token = Authentication.new.access_token
-    url = Rails.application.credentials.target_server[:url]
+  def send_json_to_server(name, options, data_to_send)
+    access_token = Authentication.new(name, options).access_token
+    url = options[:target_server][:url]
 
+    puts "Sending data to #{name}"
     begin
-      result = ApiRequestService.new(url, nil, nil, @record.json_data, { Authorization: "Bearer #{access_token}" }).post_request
+      result = ApiRequestService.new(url, nil, nil, data_to_send, { Authorization: "Bearer #{access_token}" }).post_request
       @record.update(updated_at: Time.now, audit_comment: result.body)
     rescue => e
       @record.update(updated_at: Time.now, audit_comment: e)

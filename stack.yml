@@ -14,7 +14,7 @@ services:
         traefik.enable: "true"
         traefik.port: 80
         traefik.docker.network: public
-        traefik.main.frontend.rule: Host:tmb.bad-belzig.smart-village.app
+        traefik.main.frontend.rule: Host:tmb.bad-belzig.smart-village.app,tmb.common.smart-village.app
         traefik.main.frontend.passHostHeader: "true"
         traefik.main.frontend.redirect.entryPoint: https
         traefik.api.frontend.rule: Host:tmb.bad-belzig.smart-village.app

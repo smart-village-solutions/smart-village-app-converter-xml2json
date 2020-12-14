@@ -9,7 +9,8 @@ class PoiRecord < Record
   def load_xml_data
     url = Rails.application.credentials.poi_source[:url]
     pem = Rails.application.credentials.tmb_auth[:pem]
-    result = ApiRequestService.new(url).get_request(false, pem)
+    password = Rails.application.credentials.tmb_auth[:password]
+    result = ApiRequestService.new(url).get_request(false, pem, password)
 
     return unless result.code == "200"
     return unless result.body.present?
@@ -20,7 +21,7 @@ class PoiRecord < Record
   # Parse XML Data and converts it to a Hash
   #
   # @return [Hash] Hash of point of interests
-  def convert_xml_to_hash
+  def convert_xml_to_hash(name, options)
     poi_data = []
     tour_data = []
 
@@ -28,19 +29,20 @@ class PoiRecord < Record
     @xml_doc.remove_namespaces!
     @base_file_url = @xml_doc.at_xpath("/result/@fileUrl").try(:value)
     @xml_doc.xpath("/result/poi").each do |xml_poi|
-      next if record_invalid?(xml_poi)
+      location = parse_location(xml_poi)
+      next unless record_valid?(xml_poi, location, options)
 
       if xml_poi.xpath("tours/tour").present?
-        tour_data << parse_single_tour_from_xml(xml_poi)
+        tour_data << parse_single_tour_from_xml(xml_poi, location)
       else
-        poi_data << parse_single_poi_from_xml(xml_poi)
+        poi_data << parse_single_poi_from_xml(xml_poi, location)
       end
     end
 
-    self.json_data = { point_of_interests: poi_data, tours: tour_data }
+    { point_of_interests: poi_data, tours: tour_data }
   end
 
-  def parse_single_poi_from_xml(poi)
+  def parse_single_poi_from_xml(poi, location)
     poi_data = {
       name: poi.attributes["name"].try(:value),
       description: poi.xpath("description/text/div").try(:to_s),
@@ -48,7 +50,7 @@ class PoiRecord < Record
       category_name: parse_categories(poi).first,
       addresses: parse_addresses(poi),
       contact: parse_contact(poi.xpath("connections")),
-      location: parse_location(poi),
+      location: location,
       media_contents: parse_media_contents(poi),
       price_informations: parse_price_informations(poi),
       opening_hours: parse_opening_hours(poi),
@@ -62,7 +64,7 @@ class PoiRecord < Record
     poi_data
   end
 
-  def parse_single_tour_from_xml(tour)
+  def parse_single_tour_from_xml(tour, location)
     tour_data = {
       name: tour.attributes["name"].try(:value),
       description: tour.xpath("description/text/div").try(:to_s),
@@ -70,7 +72,7 @@ class PoiRecord < Record
       category_name: parse_categories(tour).first,
       addresses: parse_addresses(tour),
       contact: parse_contact(tour.xpath("connections")),
-      location: parse_location(tour),
+      location: location,
       media_contents: parse_media_contents(tour),
       tags: parse_tags(tour),
       certificates: parse_certificates(tour),
@@ -86,17 +88,17 @@ class PoiRecord < Record
 
   private
 
-
     # Prüfe anhand der Daten ob der Eintrag importiert werden soll
     # - Englische Inhalte sollen nicht importiert werden
     #
     # @param [Nokogiri::Node] xml_poi Ein Knoten im XML Dokument
     #
-    # @return [Boolean] true wenn der Eintrag nicht importiert werden soll
-    def record_invalid?(xml_poi)
-      return true if xml_poi.attributes["language"] == "en"
+    # @return [Boolean] true wenn der Eintrag valide ist
+    def record_valid?(xml_poi, location, options)
+      return false unless xml_poi.attributes["language"].text == "de"
+      return false if !options[:districts].include?(location[:district]) && !options[:departments].include?(location[:department])
 
-      false
+      true
     end
 
     # Parsing poi data for tag information
