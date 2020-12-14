@@ -20,9 +20,13 @@ class Importer
 
     target_servers = Rails.application.credentials.target_servers
     target_servers.each do |name, options|
-      puts "Converting Data for #{name}"
-      data_to_send = @record.convert_xml_to_hash(name, options)
-      send_json_to_server(name, options, data_to_send)
+      begin
+        puts "Converting Data for #{name}"
+        data_to_send = @record.convert_xml_to_hash(name, options)
+        send_json_to_server(name, options, data_to_send)
+      rescue => e
+        puts "Error: #{e}"
+      end
     end
 
     puts "Data send to all servers"
