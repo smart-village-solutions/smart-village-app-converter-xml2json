@@ -53,6 +53,12 @@ services:
     configs:
       - source: smart-village-app-converter-xml2json-database-yml
         target: /app/config/database.yml
+      - source: unicorn-5-worker
+        target: /app/config/unicorn.rb
+      - source: bad-belzig-tmb-importer-master-key
+        target: /app/config/master.key
+      - source: bad-belzig-tmb-importer-production-key
+        target: /app/config/credentials/production.key
     volumes:
       - settings:/app/config/settings
 
