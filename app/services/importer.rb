@@ -8,7 +8,9 @@ class Importer
   # - send JSON Data to server
   # - save response from server an log it
   # - send notifications
-  def initialize(record_type)
+  def initialize(record_type, target_server_name)
+    options = Rails.application.credentials.target_servers[target_server_name]
+
     @record_type = record_type
     puts "Record type defined: #{@record_type}"
 
@@ -18,15 +20,12 @@ class Importer
     @record.load_xml_data
     puts "Data loaded from TMB"
 
-    target_servers = Rails.application.credentials.target_servers
-    target_servers.each do |name, options|
-      begin
-        puts "Converting Data for #{name}"
-        data_to_send = @record.convert_xml_to_hash(name, options)
-        send_json_to_server(name, options, data_to_send)
-      rescue => e
-        puts "Error: #{e}"
-      end
+    begin
+      puts "Converting Data for #{target_server_name}"
+      data_to_send = @record.convert_xml_to_hash(target_server_name, options)
+      send_json_to_server(target_server_name, options, data_to_send)
+    rescue => e
+      puts "Error: #{e}"
     end
 
     puts "Data send to all servers"
