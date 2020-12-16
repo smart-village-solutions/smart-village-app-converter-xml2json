@@ -20,15 +20,11 @@ class Importer
     @record.load_xml_data
     puts "Data loaded from TMB"
 
-    begin
-      puts "Converting Data for #{target_server_name}"
-      data_to_send = @record.convert_xml_to_hash(target_server_name, options)
-      send_json_to_server(target_server_name, options, data_to_send)
-    rescue => e
-      puts "Error: #{e}"
-    end
+    data_to_send = @record.convert_xml_to_hash(target_server_name, options)
+    puts "Data converted for #{target_server_name}"
 
-    puts "Data send to all servers"
+    send_json_to_server(target_server_name, options, data_to_send)
+    puts "Data send to server"
   end
 
   def new_record
@@ -45,11 +41,8 @@ class Importer
     url = options[:target_server][:url]
 
     puts "Sending data to #{name}"
-    begin
-      result = ApiRequestService.new(url, nil, nil, data_to_send, { Authorization: "Bearer #{access_token}" }).post_request
-      @record.update(updated_at: Time.now, audit_comment: result.body)
-    rescue => e
-      @record.update(updated_at: Time.now, audit_comment: e)
-    end
+
+    result = ApiRequestService.new(url, nil, nil, data_to_send, { Authorization: "Bearer #{access_token}" }).post_request
+    @record.update(updated_at: Time.now, audit_comment: result.body)
   end
 end
