@@ -42,11 +42,8 @@ class PoiRecord < Record
         CommunityRecord.create(title: target_server, data_type: "poi", json_data: data_to_store)
       end
     end
-  end
 
-  def select_target_servers(location, potential_target_servers)
-    selected_servers = potential_target_servers.select { |_server_name, options|  options[:districts].include?(location[:district].strip) || options[:departments].include?(location[:department].strip) }
-    selected_servers.try(:keys)
+    true
   end
 
   def parse_single_poi_from_xml(poi, location)
