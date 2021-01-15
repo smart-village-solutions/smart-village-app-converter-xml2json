@@ -6,6 +6,7 @@ services:
     networks:
       - default
       - public
+      - smart-village-app-converter-xml2json
     environment:
       RAILS_ENV: production
       RAILS_LOG_TO_STDOUT: 1
@@ -13,12 +14,13 @@ services:
       resources:
         limits:
           cpus: '0.50'
-          memory: 1000M
+          memory: 2000M
   app:
     image: registry.gitlab.tpwd.de/ikusei/smart-village-app-converter-xml2json
     networks:
       - default
       - public
+      - smart-village-app-converter-xml2json
     environment:
       RAILS_ENV: production
       RAILS_LOG_TO_STDOUT: 1
@@ -26,7 +28,7 @@ services:
       resources:
         limits:
           cpus: '0.50'
-          memory: 1000M
+          memory: 2000M
       labels:
         traefik.enable: "true"
         traefik.port: 80
@@ -40,12 +42,16 @@ services:
 
   db:
     networks:
-      default:
+      smart-village-app-converter-xml2json:
+        aliases:
+          - smart-village-app-converter-xml2json
       adminer:
         aliases:
           - bb-bad-belzig-tmb-importer
 
 networks:
+  smart-village-app-converter-xml2json:
+    external: true
   adminer:
     external: true
   public:

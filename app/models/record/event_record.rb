@@ -14,6 +14,7 @@ class EventRecord < Record
     return unless result.body.present?
 
     self.xml_data = result.body
+    self.save
   end
 
   # Parse XML Data and converts it to a Hash

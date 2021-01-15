@@ -10,7 +10,7 @@ services:
     networks:
       public:
     configs:
-      - source: smart-village-app-converter-xml2json-database-yml
+      - source: smart-village-app-converter-tmb-database-yml
         target: /app/config/database.yml
       - source: unicorn-5-worker
         target: /app/config/unicorn.rb
@@ -51,7 +51,7 @@ services:
     command: bin/start-cron.sh
     depends_on: [db]
     configs:
-      - source: smart-village-app-converter-xml2json-database-yml
+      - source: smart-village-app-converter-tmb-database-yml
         target: /app/config/database.yml
       - source: unicorn-5-worker
         target: /app/config/unicorn.rb
@@ -71,7 +71,7 @@ volumes:
 configs:
   smart-village-app-converter-xml2json-nginx-conf:
     external: true
-  smart-village-app-converter-xml2json-database-yml:
+  smart-village-app-converter-tmb-database-yml:
     external: true
   unicorn-5-worker:
     external: true

@@ -1,11 +1,4 @@
 GIT
-  remote: https://github.com/collectiveidea/audited.git
-  revision: 8052b4753e10fc1ae1ed036cecfa8757d9595d2f
-  specs:
-    audited (4.9.0)
-      activerecord (>= 4.2, < 6.1)
-
-GIT
   remote: https://github.com/ikuseiGmbH/linters.git
   revision: 57e587a215a38a73463afd48ff5c66aeb252b611
   tag: rubocop-0.63.1
@@ -271,7 +264,6 @@ PLATFORMS
 DEPENDENCIES
   addressable
   annotate
-  audited!
   bootsnap (>= 1.4.2)
   byebug
   codeclimate-test-reporter

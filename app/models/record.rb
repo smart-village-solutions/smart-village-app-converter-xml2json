@@ -1,6 +1,4 @@
 class Record < ApplicationRecord
-  audited only: :updated_at
-
   def load_xml_data
     raise "Abstract Method"
   end
