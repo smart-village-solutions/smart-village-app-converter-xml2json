@@ -37,22 +37,22 @@ class EventRecord < Record
     true
   end
 
-  # Parse XML Data and converts it to a Hash
-  #
-  # @return [Hash] Hash of events
-  def convert_xml_to_hash(name, options)
-    event_data = []
-    @xml_doc = Nokogiri.XML(xml_data)
-    @xml_doc.remove_namespaces!
-    @xml_doc.xpath("/brandenburgevents/EVENT").each do |xml_event|
-      location = parse_location(xml_event)
-      next unless record_valid?(xml_event, location, options)
+  # # Parse XML Data and converts it to a Hash
+  # #
+  # # @return [Hash] Hash of events
+  # def convert_xml_to_hash(name, options)
+  #   event_data = []
+  #   @xml_doc = Nokogiri.XML(xml_data)
+  #   @xml_doc.remove_namespaces!
+  #   @xml_doc.xpath("/brandenburgevents/EVENT").each do |xml_event|
+  #     location = parse_location(xml_event)
+  #     next unless record_valid?(xml_event, location, options)
 
-      event_data << parse_single_event_from_xml(xml_event, location)
-    end
+  #     event_data << parse_single_event_from_xml(xml_event, location)
+  #   end
 
-    { events: event_data }
-  end
+  #   { events: event_data }
+  # end
 
   def parse_single_event_from_xml(event, location)
     event_data = {
