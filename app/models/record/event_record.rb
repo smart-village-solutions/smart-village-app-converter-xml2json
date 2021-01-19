@@ -186,7 +186,7 @@ class EventRecord < Record
   def parse_location(event)
     {
       region_name: event.at_xpath("REGION_NAME_D").try(:text),
-      departments: event.at_xpath("TMBORTE_NAME").try(:text),
+      department: event.at_xpath("TMBORTE_NAME").try(:text),
       district: event.at_xpath("REGION_NAME_D").try(:text),
     }
   end
