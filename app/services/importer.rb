@@ -18,6 +18,7 @@ class Importer
     def send_data(record_type)
       all_options = Rails.application.credentials.target_servers
       CommunityRecord.where(data_type: record_type.to_s).group_by(&:title).each do |target_server_name, records|
+        p "Server: #{target_server_name}, #{records.count} entries"
         records.each do |record|
           data_to_send = record.json_data
           options = all_options[target_server_name.to_sym]
@@ -37,12 +38,16 @@ class Importer
     end
 
     def send_json_to_server(name, options, data_to_send)
-      access_token = Authentication.new(name, options).access_token
-      url = options[:target_server][:url]
+      begin
+        access_token = Authentication.new(name, options).access_token
+        url = options[:target_server][:url]
 
-      puts "Sending data to #{name}"
+        puts "Sending data to #{name}"
 
-      ApiRequestService.new(url, nil, nil, data_to_send, { Authorization: "Bearer #{access_token}" }).post_request
+        ApiRequestService.new(url, nil, nil, data_to_send, { Authorization: "Bearer #{access_token}" }).post_request
+      rescue
+        p "Error on sending to #{name}"
+      end
     end
   end
 end
