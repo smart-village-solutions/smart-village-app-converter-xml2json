@@ -13,8 +13,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.50'
-          memory: 2000M
+          cpus: '0.80'
+          memory: 3000M
   app:
     image: registry.gitlab.tpwd.de/ikusei/smart-village-app-converter-xml2json
     networks:
@@ -27,8 +27,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '0.50'
-          memory: 2000M
+          cpus: '0.80'
+          memory: 3000M
       labels:
         traefik.enable: "true"
         traefik.port: 80
