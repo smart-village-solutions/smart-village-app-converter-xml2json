@@ -45,8 +45,8 @@ class Importer
         puts "Sending data to #{name}"
 
         ApiRequestService.new(url, nil, nil, data_to_send, { Authorization: "Bearer #{access_token}" }).post_request
-      rescue
-        p "Error on sending to #{name}"
+      rescue => e
+        p "Error on sending to #{name}: #{e}"
       end
     end
   end
