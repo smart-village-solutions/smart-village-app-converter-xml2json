@@ -48,6 +48,8 @@ group :development do
   gem "database_cleaner"
   gem "factory_bot_rails"
   gem "factory_bot"
+  gem "guard-rspec"
+  gem "guard"
   gem "linter", git: "https://github.com/ikuseiGmbH/linters.git", tag: "rubocop-0.63.1"
   gem "rails-controller-testing"
   gem "rspec-rails"

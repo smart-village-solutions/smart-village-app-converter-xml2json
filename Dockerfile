@@ -11,7 +11,7 @@ COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
 
 COPY . .
 
-RUN bundle install
+RUN RAILS_ENV=production bundle install
 
 ENTRYPOINT ["/app/docker/entrypoint.sh"]
 
