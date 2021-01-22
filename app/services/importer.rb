@@ -24,7 +24,7 @@ class Importer
           options = all_options[target_server_name.to_sym]
 
           send_json_to_server(target_server_name, options, data_to_send)
-          sleep 0.5
+          sleep 1
         end
         p "Waiting 240 seconds..."
         sleep 240
