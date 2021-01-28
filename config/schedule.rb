@@ -29,20 +29,20 @@ every 1.day, at: "01:05 am" do
   runner "Importer.parse_data(:poi)"
 end
 
-every 1.day, at: "03:05 am" do
+every 1.day, at: "02:05 am" do
   runner "Importer.send_data(:poi)"
 end
 
 
-every 1.day, at: "04:30 am" do
+every 1.day, at: "00:30 am" do
   runner "Importer.load_data(:event)"
 end
 
-every 1.day, at: "05:05 am" do
+every 1.day, at: "01:30 am" do
   runner "Importer.parse_data(:event)"
 end
 
-every 1.day, at: "06:05 am" do
+every 1.day, at: "02:30 am" do
   runner "Importer.send_data(:event)"
 end
 
