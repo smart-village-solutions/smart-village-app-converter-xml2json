@@ -15,7 +15,8 @@ class Setting
   end
 
   def config_file_present_or_create
-    return if File.exist?(file_name)
+    return if File.exist?(file_name) && File.open(file_name, "r").read.include?("access_token")
+
     defaults = { oauth: { access_token: "", refresh_token: "" } }
     File.open(file_name, "w") { |f| f.write(defaults.to_yaml) }
   end
