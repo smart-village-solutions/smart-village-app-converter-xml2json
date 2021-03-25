@@ -3,7 +3,12 @@ class Setting
 
   def initialize
     config_file_present_or_create
-    @config = YAML.load_file(file_name)
+    begin
+      @config = YAML.load_file(file_name)
+    rescue
+      create_configs
+      @config = YAML.load_file(file_name)
+    end
   end
 
   def save
@@ -17,6 +22,10 @@ class Setting
   def config_file_present_or_create
     return if File.exist?(file_name) && File.open(file_name, "r").read.include?("access_token")
 
+    create_configs
+  end
+
+  def create_configs
     defaults = { oauth: { access_token: "", refresh_token: "" } }
     File.open(file_name, "w") { |f| f.write(defaults.to_yaml) }
   end
