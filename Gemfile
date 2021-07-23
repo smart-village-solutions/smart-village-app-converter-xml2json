@@ -27,13 +27,15 @@ gem "nokogiri"
 
 gem "addressable"
 
+
+
 # Use Rack CORS for handling Cross-Origin Resource Sharing (CORS), making cross-origin AJAX possible
 # gem "rack-cors"
 
 gem "unicorn"
 gem "whenever"
 
-gem "mimemagic", "~> 0.3.6"
+gem "mimemagic", "~> 0.3.7"
 
 group :development, :test do
   # Call "byebug" anywhere in the code to stop execution and get a debugger console
