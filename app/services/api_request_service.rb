@@ -52,6 +52,7 @@ class ApiRequestService
       end
     end
 
+    http.read_timeout = 900
     http.request(request)
 
   rescue Timeout::Error
