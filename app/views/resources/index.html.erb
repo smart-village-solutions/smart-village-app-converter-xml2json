@@ -1,0 +1,31 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Resources</h1>
+
+<%= link_to 'Sort by Name', resources_path(sort_by: "title") %>
+<%= link_to 'Sort by Date', resources_path(sort_by: "created_at") %>
+
+<br>
+
+<div class="row">
+  <% @resources.group_by(&:type).each do |type, resources| %>
+    <div class="column">
+      <table>
+        <thead>
+          <tr>
+            <th><%= type.humanize %></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% resources.each_with_index do |resource, index| %>
+            <tr>
+              <td><%= index +1 %></td>
+              <td><%= resource.title %></td>
+              <td><%= resource.created_at.strftime("%d.%m.%Y %H:%M") %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+</div>

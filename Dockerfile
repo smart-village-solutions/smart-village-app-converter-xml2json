@@ -12,6 +12,7 @@ COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
 COPY . .
 
 RUN bundle install --without development test
+RUN bundle exec rake DATABASE_URL=nulldb://user:pass@127.0.0.1/dbname assets:precompile
 
 ENTRYPOINT ["/app/docker/entrypoint.sh"]
 

@@ -30,3 +30,10 @@
 /config/credentials/test.key
 /config/credentials/development.key
 config/settings/settings.yml
+
+/public/packs
+/public/packs-test
+/node_modules
+/yarn-error.log
+yarn-debug.log*
+.yarn-integrity

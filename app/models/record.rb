@@ -24,6 +24,7 @@ class Record < ApplicationRecord
 
   def select_target_servers(location, potential_target_servers)
     p "#{location[:district]}, #{location[:department]}, #{location[:region_name]}"
+    store_locations(location)
 
     selected_servers = potential_target_servers.select { |_server_name, options|
       options[:districts].include?(location[:district].to_s.strip) ||
@@ -31,6 +32,12 @@ class Record < ApplicationRecord
         options[:regions].include?(location[:region_name].to_s.strip)
     }
     selected_servers.try(:keys)
+  end
+
+  def store_locations(location)
+    Resource.where(title: location[:district], type: 'district').first_or_create if location[:district].present?
+    Resource.where(title: location[:department], type: 'department').first_or_create if location[:department].present?
+    Resource.where(title: location[:region_name], type: 'region').first_or_create if location[:region_name].present?
   end
 
 end
